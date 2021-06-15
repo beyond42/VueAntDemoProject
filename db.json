@@ -1,0 +1,44 @@
+{
+  "users": [
+    {
+      "id": "marko",
+      "name": "Marko Obrenovic",
+      "phone": "065 987 6543",
+      "email": "marko@beyond.com",
+      "isFavorite": true,
+      "date": "2021-06-13"
+    },
+    {
+      "id": "2021-06-13T20:48:22.786Z",
+      "name": "Adam Ilic",
+      "phone": "069 3373720",
+      "email": "adam@mail.com",
+      "isFavorite": true,
+      "date": "2021-06-13"
+    },
+    {
+      "id": "2021-06-13T21:15:58.709Z",
+      "name": "Nevena Ruzic",
+      "phone": "06761616616",
+      "email": "nevena@test.com",
+      "isFavorite": false,
+      "date": "2021-06-13"
+    },
+    {
+      "id": "2021-06-13T22:45:10.584Z",
+      "name": "test",
+      "phone": "0999999",
+      "email": "test@yyy.com",
+      "isFavorite": false,
+      "date": "2021-06-08"
+    }
+  ],
+  "images": [
+    {
+      "id": 1
+    },
+    {
+      "id": 2
+    }
+  ]
+}

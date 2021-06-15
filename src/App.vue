@@ -1,14 +1,15 @@
 <template>
-  <new-friend @add-contact="addContact"></new-friend>
+  <new-friend @add-contact="addContact" @add-contact-image="addContactImage"></new-friend>
     <ul>
       <friend-contact 
-        v-for="friend in friends"
+        v-for="friend in results"
         :key="friend.id"
         :id="friend.id"
         :name="friend.name" 
         :phone-number="friend.phone" 
         :emailAddress="friend.email"
         :is-favorite="friend.isFavorite"
+        :dateOfBirth="friend.date"
         @toggle-favorite='toggleFavoriteStatus'
         @delete='deleteContact'>
       </friend-contact>
@@ -16,53 +17,91 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      friends: [
-        {
-          id: "ivana",
-          name: "Ivana Ilic",
-          phone: "069 351 4545",
-          email: "ivana@beyond.com",
-          isFavorite: true,
-        },
-        {
-          id: "nevena",
-          name: "Nevena Ruzic",
-          phone: "065 123 4567",
-          email: "nevena@beyond.com",
-          isFavorite: true,
-        },
-        {
-          id: "marko",
-          name: "Marko Obrenovic",
-          phone: "065 987 6543",
-          email: "marko@beyond.com",
-          isFavorite: true,
-        },
-      ],
+      results: []
     };
   },
+  async created() {
+    try {
+      const res = await axios.get(`http://localhost:3000/users`)
+      this.results = res.data;
+      // for (const id in this.results) {
+      //   console.log(id)
+      //   console.log(this.results[id].name)
+      // }
+      
+    } catch(e) {
+      console.error(e)
+    }
+  },
   methods: {
-    toggleFavoriteStatus(friendId) {
-      const identifiedFriend = this.friends.find(
+    async toggleFavoriteStatus(friendId) {
+       const identifiedFriend = this.results.find(
         (friend) => friend.id === friendId);
       identifiedFriend.isFavorite = !identifiedFriend.isFavorite;
+      await axios.patch('http://localhost:3000/users/' + friendId, { isFavorite: identifiedFriend.isFavorite }).then(response => {
+        console.log(response)
+      })
+      .catch(err => console.log(err.response.data));
     },
-    addContact(name, phone, email) {
+    async addContact(name, phone, email, date) {
       const newFriendContact = {
         id: new Date().toISOString(),
         name: name,
         phone: phone,
         email: email,
-        isFavorite: false
+        isFavorite: false,
+        date: date
       }
-      this.friends.push(newFriendContact);
+      // const res = await axios.post(`https://vue-ant-project-default-rtdb.firebaseio.com/users.json`, newFriendContact)
+      const res = await axios.post(`http://localhost:3000/users`, newFriendContact)
+      this.results = [...this.results, res.data]
+
+    },
+    addContactImage(name, phone, email, date, file) {
+        /*
+                Initialize the form data
+            */
+            let formData = new FormData();
+
+            /*
+                Add the form data we need to submit
+            */
+           console.log('u app.vue')
+           console.log(file)
+            formData.append('file', file);
+
+        /*
+          Make the request to the POST /single-file URL
+        */
+            axios.post('src/assets',
+                formData,
+                {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+              }
+            ).then(function(){
+          console.log('SUCCESS!!');
+        })
+        .catch(function(){
+          console.log('FAILURE!!');
+        });
+      
     },
     deleteContact(friendId) {
-      this.friends = this.friends.filter((friend) => friend.id !== friendId);
-    }
+      axios
+      .delete("http://localhost:3000/users/" + friendId)
+      .then(response => {
+        this.results = this.results.filter((friend) => friend.id !== friendId);
+        console.log(response)
+        console.log(this.results);
+      });
+    },
   }
 };
 </script>

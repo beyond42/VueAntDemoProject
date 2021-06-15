@@ -12,6 +12,10 @@
         <strong>Email:</strong>
         {{ emailAddress }}
       </li>
+      <li>
+        <strong>Date of birth:</strong>
+        {{ dateOfBirth }}
+      </li>
     </ul>
     <button @click="deleteFriend">Delete friend</button>
   </li>
@@ -40,18 +44,16 @@ export default {
       type: Boolean,
       required: false,
       default: false,
+    },
+    dateOfBirth: {
+      type: String,
+      required: true
     }
   },
   emits: ['toggle-favorite', 'delete'],
   data() {
     return {
       detailsAreVisible: false,
-      friend: {
-        id: "manuel",
-        name: "Manuel Lorenz",
-        phone: "0123 45678 90",
-        email: "manuel@localhost.com",
-      }
     };
   },
   methods: {
