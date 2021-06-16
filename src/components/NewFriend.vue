@@ -17,14 +17,8 @@
             <input type="date" v-model="date">
         </div>
         <div>
-            <button>Add contact</button>
-        </div>
-    </form>
-    <form @submit.prevent="submitFile">
-        <div>
             <label>File</label>
             <input type="file" id="file" ref="file" v-on:change="loadTextFromFile"/>
-            <!-- <input type='file' files.bind="file" id="input"/> -->
         </div>
         <div>
             <img id="coverImage" :src="imgSrc" width="650px" height="300px"/>
@@ -42,60 +36,29 @@ export default {
             enteredName: '',
             enteredPhone: '',
             enteredEmail: '',
-            file: '',
-            imgSrc: '',
+            imgSrc: '../assets/avatar.png',
+            imgName: '',
             date: new Date().toISOString().slice(0,10),
             reg: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
         }
     },
-    emits: ['add-contact', 'add-contact-image'],
+    emits: ['add-contact'],
     methods: {
-        handleFileUpload(){
-            this.file = this.$refs.file.files[0];
-
-            // if (this.file  !== null) {
-            //     console.log('u ifu smo')
-            //     var reader = new FileReader();
-            //     reader.onload = e => console.log(e);
-                // reader.onload = (e) => {
-                //     var tmpE = e;
-                //     // $('#coverImage').attr('src', tmpE.target.result);
-                //     // this.file = tmpE.target.result;
-                //     console.log('file')
-                //     console.log(this.file)
-                //     console.log('target.result')
-                //     console.log(tmpE.target.result)
-                // }
-                // reader.readAsDataURL(this.file[0]);
-            // }
-            console.log('van ifa file')
-            console.log(this.file)
-        },
         loadTextFromFile(ev) {
             const file = ev.target.files[0];
             const reader = new FileReader();
-
-            // reader.onload = e => this.$emit("load", e.target.result);
             reader.onload = e => {
-                console.log(e.target.result);
                 this.imgSrc = e.target.result;
-                console.log(this.imgSrc)
+                this.imgName = "imageSource" + new Date().toISOString()
+                window.localStorage.setItem(this.imgName, JSON.stringify(this.imgSrc));
             }
-            
             reader.readAsDataURL(file);
-
-            
-
         },
         submitData() {
-            this.$emit('add-contact', this.enteredName, this.enteredPhone, this.enteredEmail, this.date);
-            // this.$emit('add-contact-image', this.enteredName, this.enteredPhone, this.enteredEmail, this.date, this.file);
+            this.$emit('add-contact', this.enteredName, this.enteredPhone, this.enteredEmail, this.date, this.imgName);
             this.enteredName = '';
             this.enteredPhone = '';
             this.enteredEmail = '';
-        },
-        submitFile() {
-            // this.$emit('add-contact-image', this.enteredName, this.enteredPhone, this.enteredEmail, this.date, this.file);
         },
         isEmailValid: function() {
             return (this.enteredEmail == "")? "" : (this.reg.test(this.enteredEmail)) ? 'has-success' : 'has-error';

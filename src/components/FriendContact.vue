@@ -1,5 +1,6 @@
 <template>
   <li>
+    <img id="coverImage" :src="imgSrc"/>
     <h2>{{ name }} {{ isFavorite ? '(Favorite)' : ''}}</h2>
     <button @click="toggleFavorite">Toggle favorite</button>
     <button @click="toggleDetails">{{ detailsAreVisible ? 'Hide' : 'Show' }} Details</button>
@@ -48,6 +49,11 @@ export default {
     dateOfBirth: {
       type: String,
       required: true
+    },
+    imgSrc: {
+      type: String,
+      required: false,
+      default: '../assets/avatar.png'
     }
   },
   emits: ['toggle-favorite', 'delete'],
@@ -69,3 +75,10 @@ export default {
   }
 };
 </script>
+
+<style>
+    #coverImage {
+        width: 300px;
+        height: 300px;
+    }
+</style>

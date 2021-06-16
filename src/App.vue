@@ -10,6 +10,7 @@
         :emailAddress="friend.email"
         :is-favorite="friend.isFavorite"
         :dateOfBirth="friend.date"
+        :imgSrc="findImg(friend.imgSrc)"
         @toggle-favorite='toggleFavoriteStatus'
         @delete='deleteContact'>
       </friend-contact>
@@ -22,18 +23,14 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      results: []
+      results: [],
+      imageSrc: ''
     };
   },
   async created() {
     try {
       const res = await axios.get(`http://localhost:3000/users`)
       this.results = res.data;
-      // for (const id in this.results) {
-      //   console.log(id)
-      //   console.log(this.results[id].name)
-      // }
-      
     } catch(e) {
       console.error(e)
     }
@@ -48,16 +45,16 @@ export default {
       })
       .catch(err => console.log(err.response.data));
     },
-    async addContact(name, phone, email, date) {
+    async addContact(name, phone, email, date, imgSrc) {
       const newFriendContact = {
         id: new Date().toISOString(),
         name: name,
         phone: phone,
         email: email,
         isFavorite: false,
-        date: date
+        date: date,
+        imgSrc: imgSrc
       }
-      // const res = await axios.post(`https://vue-ant-project-default-rtdb.firebaseio.com/users.json`, newFriendContact)
       const res = await axios.post(`http://localhost:3000/users`, newFriendContact)
       this.results = [...this.results, res.data]
 
@@ -102,6 +99,9 @@ export default {
         console.log(this.results);
       });
     },
+    findImg(imgSrc) {
+      return JSON.parse(window.localStorage.getItem(imgSrc));
+    }
   }
 };
 </script>
