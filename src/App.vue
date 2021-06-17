@@ -1,6 +1,8 @@
 <template>
-  <new-friend @add-contact="addContact" @add-contact-image="addContactImage"></new-friend>
-    <ul>
+<a-row type="flex">
+    <new-friend @add-contact="addContact"></new-friend>
+</a-row>
+<a-row type="flex">
       <friend-contact 
         v-for="friend in results"
         :key="friend.id"
@@ -14,7 +16,9 @@
         @toggle-favorite='toggleFavoriteStatus'
         @delete='deleteContact'>
       </friend-contact>
-    </ul>
+</a-row>
+  
+    
 </template>
 
 <script>
@@ -58,37 +62,6 @@ export default {
       const res = await axios.post(`http://localhost:3000/users`, newFriendContact)
       this.results = [...this.results, res.data]
 
-    },
-    addContactImage(name, phone, email, date, file) {
-        /*
-                Initialize the form data
-            */
-            let formData = new FormData();
-
-            /*
-                Add the form data we need to submit
-            */
-           console.log('u app.vue')
-           console.log(file)
-            formData.append('file', file);
-
-        /*
-          Make the request to the POST /single-file URL
-        */
-            axios.post('src/assets',
-                formData,
-                {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-              }
-            ).then(function(){
-          console.log('SUCCESS!!');
-        })
-        .catch(function(){
-          console.log('FAILURE!!');
-        });
-      
     },
     deleteContact(friendId) {
       axios
@@ -138,40 +111,33 @@ header {
   margin: 1rem auto;
   border-radius: 10px;
   padding: 1rem;
-  text-align: center;
+  text-align: left;
   width: 90%;
   max-width: 40rem;
 }
+#app .user-details {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  margin: 1rem auto;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+}
 #app h2 {
-  font-size: 2rem;
+  font-size: 1.2rem;
   border-bottom: 4px solid #ccc;
   color: #58004d;
   margin: 0 0 1rem 0;
 }
-#app button {
-  font: inherit;
-  cursor: pointer;
-  border: 1px solid #ff0077;
-  background-color: #ff0077;
-  color: white;
-  padding: 0.05rem 1rem;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.26);
-}
-#app button:hover,
-#app button:active {
-  background-color: #ec3169;
-  border-color: #ec3169;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.26);
-}
+
 #app input {
   font: inherit;
   padding: 0.15rem;
 }
 #app label {
-  font-weight: bold;
+  text-align: left;
   margin-right: 1rem;
-  width: 7rem;
-  display: inline-block;
+  margin-bottom: 0.3rem;
+  display: inline;
 }
 #app form div {
   margin: 1rem 0;
