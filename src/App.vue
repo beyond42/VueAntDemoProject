@@ -1,5 +1,5 @@
 <template>
-<a-row type="flex">
+<!-- <a-row type="flex">
     <new-friend @add-contact="addContact"></new-friend>
 </a-row>
 <a-row type="flex">
@@ -16,19 +16,72 @@
         @toggle-favorite='toggleFavoriteStatus'
         @delete='deleteContact'>
       </friend-contact>
-</a-row>
+</a-row> -->
   
+    <!-- <ant-form></ant-form> -->
+<!-- <a-row type="flex"> -->
+    <!-- <user></user> -->
+
+
     
+<!-- </a-row> -->
+
+<section>
+    <a-row :gutter="16" justify="center">
+        <a-col class="gutter-row" :span="14">
+            <h1>{{ titles[current] }}</h1>
+        </a-col>
+    </a-row>
+
+    <a-row :gutter="16" justify="center">
+        <a-col class="gutter-row" :span="12">
+            <user
+            v-if="current === 0"
+            @next-step='nextStep'
+            ></user>
+            <event-details
+            v-if="current === 1"
+            @next-step='nextStep'
+            @previous-step='previousStep'>
+            </event-details>
+            <future-virtual-experience
+            v-if="current === 2"
+            @next-step='nextStep'
+            @previous-step='previousStep'>
+            </future-virtual-experience>
+            <general-layout
+            v-if="current === 3"
+            @previous-step='previousStep'></general-layout>
+
+        </a-col>
+
+        <a-col class="gutter-row" :span="6">
+            <a-steps v-model:current="current" direction="vertical">
+                <a-step title="Personal information" />
+                <a-step title="Event information" />
+                <a-step title="Future virtual experience" />
+                <a-step title="General layout of virtual event" />
+            </a-steps>
+        </a-col>
+    </a-row>
+
+</section>
+
 </template>
 
 <script>
 import axios from 'axios';
+import User from './components/User.vue';
+import EventDetails from './components/EventDetails.vue';
 
 export default {
+  components: { User, EventDetails },
   data() {
     return {
       results: [],
-      imageSrc: ''
+      titles: ['Personal information', 'Event info', 'Future virtual experience', 'General layout of virtual event'],
+      imageSrc: '',
+      current: 0
     };
   },
   async created() {
@@ -74,13 +127,21 @@ export default {
     },
     findImg(imgSrc) {
       return JSON.parse(window.localStorage.getItem(imgSrc));
+    },
+    nextStep() {
+      this.current++;
+      console.log(this.current)
+    },
+    previousStep() {
+      this.current--;
+      console.log(this.current)
     }
   }
 };
 </script>
 
 <style>
-* {
+/* * {
   box-sizing: border-box;
 }
 html {
@@ -141,5 +202,5 @@ header {
 }
 #app form div {
   margin: 1rem 0;
-}
+} */
 </style>

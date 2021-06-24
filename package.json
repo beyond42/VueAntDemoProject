@@ -10,6 +10,7 @@
     "mockdev": "npm run mock & npm run serve"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.6.2",
     "@ant-design/icons-vue": "^6.0.1",
     "ant-design-vue": "^2.2.0-beta.3",
     "axios": "^0.21.1",
