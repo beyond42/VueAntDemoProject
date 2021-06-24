@@ -1,5 +1,5 @@
 <template>
-<!-- <a-row type="flex">
+  <!-- <a-row type="flex">
     <new-friend @add-contact="addContact"></new-friend>
 </a-row>
 <a-row type="flex">
@@ -17,56 +17,51 @@
         @delete='deleteContact'>
       </friend-contact>
 </a-row> -->
-  
-    <!-- <ant-form></ant-form> -->
-<!-- <a-row type="flex"> -->
-    <!-- <user></user> -->
 
+  <!-- <ant-form></ant-form> -->
+  <!-- <a-row type="flex"> -->
+  <!-- <user></user> -->
 
-    
-<!-- </a-row> -->
+  <!-- </a-row> -->
 
-<section>
+  <section>
     <a-row :gutter="16" justify="center">
-        <a-col class="gutter-row" :span="14">
-            <h1>{{ titles[current] }}</h1>
-        </a-col>
+      <a-col class="gutter-row" :span="14">
+        <h1>{{ titles[current] }}</h1>
+      </a-col>
     </a-row>
 
     <a-row :gutter="16" justify="center">
-        <a-col class="gutter-row" :span="12">
-            <user
-            v-if="current === 0"
-            @next-step='nextStep'
-            ></user>
-            <event-details
-            v-if="current === 1"
-            @next-step='nextStep'
-            @previous-step='previousStep'>
-            </event-details>
-            <future-virtual-experience
-            v-if="current === 2"
-            @next-step='nextStep'
-            @previous-step='previousStep'>
-            </future-virtual-experience>
-            <general-layout
-            v-if="current === 3"
-            @previous-step='previousStep'></general-layout>
+      <a-col class="gutter-row" :span="12">
+        <user v-if="current === 0" @next-step="nextStep"></user>
+        <event-details
+          v-if="current === 1"
+          @next-step="nextStep"
+          @previous-step="previousStep"
+        >
+        </event-details>
+        <future-virtual-experience
+          v-if="current === 2"
+          @next-step="nextStep"
+          @previous-step="previousStep"
+        >
+        </future-virtual-experience>
+        <general-layout
+          v-if="current === 3"
+          @previous-step="previousStep"
+        ></general-layout>
+      </a-col>
 
-        </a-col>
-
-        <a-col class="gutter-row" :span="6">
-            <a-steps v-model:current="current" direction="vertical">
-                <a-step title="Personal information" />
-                <a-step title="Event information" />
-                <a-step title="Future virtual experience" />
-                <a-step title="General layout of virtual event" />
-            </a-steps>
-        </a-col>
+      <a-col class="gutter-row" :span="6">
+        <a-steps v-model:current="current" direction="vertical">
+          <a-step title="Personal information" />
+          <a-step title="Event information" />
+          <a-step title="Future virtual experience" />
+          <a-step title="General layout of virtual event" />
+        </a-steps>
+      </a-col>
     </a-row>
-
-</section>
-
+  </section>
 </template>
 
 <script>
@@ -79,28 +74,38 @@ export default {
   data() {
     return {
       results: [],
-      titles: ['Personal information', 'Event info', 'Future virtual experience', 'General layout of virtual event'],
+      titles: [
+        'Personal information',
+        'Event info',
+        'Future virtual experience',
+        'General layout of virtual event',
+      ],
       imageSrc: '',
-      current: 0
+      current: 0,
     };
   },
   async created() {
     try {
-      const res = await axios.get(`http://localhost:3000/users`)
+      const res = await axios.get(`http://localhost:3000/users`);
       this.results = res.data;
-    } catch(e) {
-      console.error(e)
+    } catch (e) {
+      console.error(e);
     }
   },
   methods: {
     async toggleFavoriteStatus(friendId) {
-       const identifiedFriend = this.results.find(
-        (friend) => friend.id === friendId);
+      const identifiedFriend = this.results.find(
+        (friend) => friend.id === friendId
+      );
       identifiedFriend.isFavorite = !identifiedFriend.isFavorite;
-      await axios.patch('http://localhost:3000/users/' + friendId, { isFavorite: identifiedFriend.isFavorite }).then(response => {
-        console.log(response)
-      })
-      .catch(err => console.log(err.response.data));
+      await axios
+        .patch('http://localhost:3000/users/' + friendId, {
+          isFavorite: identifiedFriend.isFavorite,
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => console.log(err.response.data));
     },
     async addContact(name, phone, email, date, imgSrc) {
       const newFriendContact = {
@@ -110,33 +115,37 @@ export default {
         email: email,
         isFavorite: false,
         date: date,
-        imgSrc: imgSrc
-      }
-      const res = await axios.post(`http://localhost:3000/users`, newFriendContact)
-      this.results = [...this.results, res.data]
-
+        imgSrc: imgSrc,
+      };
+      const res = await axios.post(
+        `http://localhost:3000/users`,
+        newFriendContact
+      );
+      this.results = [...this.results, res.data];
     },
     deleteContact(friendId) {
       axios
-      .delete("http://localhost:3000/users/" + friendId)
-      .then(response => {
-        this.results = this.results.filter((friend) => friend.id !== friendId);
-        console.log(response)
-        console.log(this.results);
-      });
+        .delete('http://localhost:3000/users/' + friendId)
+        .then((response) => {
+          this.results = this.results.filter(
+            (friend) => friend.id !== friendId
+          );
+          console.log(response);
+          console.log(this.results);
+        });
     },
     findImg(imgSrc) {
       return JSON.parse(window.localStorage.getItem(imgSrc));
     },
     nextStep() {
       this.current++;
-      console.log(this.current)
+      console.log(this.current);
     },
     previousStep() {
       this.current--;
-      console.log(this.current)
-    }
-  }
+      console.log(this.current);
+    },
+  },
 };
 </script>
 

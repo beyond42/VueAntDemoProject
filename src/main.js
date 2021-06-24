@@ -1,11 +1,25 @@
 import { createApp } from 'vue';
 
-import { Button, Input, Form, Layout, DatePicker, InputNumber, Upload, Row, Col, Select, Steps, Checkbox, Space, TimePicker} from 'ant-design-vue';
+import {
+  Button,
+  Input,
+  Form,
+  Layout,
+  DatePicker,
+  InputNumber,
+  Upload,
+  Row,
+  Col,
+  Select,
+  Steps,
+  Checkbox,
+  Space,
+  TimePicker,
+} from 'ant-design-vue';
 
 import App from './App.vue';
-import FriendContact from './components/FriendContact.vue';
-import NewFriend from './components/NewFriend.vue';
-import AntForm from './components/AntForm.vue'
+import FriendContact from './components/FriendsApp/FriendContact.vue';
+import NewFriend from './components/FriendsApp/NewFriend.vue';
 
 import User from './components/User.vue';
 import EventDetails from './components/EventDetails.vue';
@@ -16,12 +30,10 @@ const app = createApp(App);
 
 app.component('friend-contact', FriendContact);
 app.component('new-friend', NewFriend);
-app.component('ant-form', AntForm);
 app.component('user', User);
 app.component('event-details', EventDetails);
 app.component('future-virtual-experience', FutureVirtualExperience);
 app.component('general-layout', GeneralLayout);
-
 
 app.use(Button);
 app.use(Input);
