@@ -17,7 +17,6 @@
 
     <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
       <a-button type="primary" @click="previousStep">Previous</a-button>
-
       <a-button type="primary" @click="onSubmit">Submit</a-button>
     </a-form-item>
   </a-form>
