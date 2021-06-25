@@ -82,10 +82,10 @@ export default {
   data() {
     return {
       labelCol: {
-        span: 4,
+        span: 8,
       },
       wrapperCol: {
-        span: 14,
+        span: 12,
       },
       formState: {
         boothsNo: "",
