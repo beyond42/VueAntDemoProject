@@ -55,7 +55,7 @@
       required
       help="Please provide us your phone number"
     >
-      <a-input-group compact>
+      <a-input-group class="phone-group" compact>
         <a-select style="width: 25%" v-model:value="formState.country_code">
           <a-select-option value="+381">+381</a-select-option>
           <a-select-option value="+387">+387</a-select-option>
@@ -67,14 +67,13 @@
         />
       </a-input-group>
     </a-form-item>
-    <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-      <a-button type="primary" @click="nextStep">Next</a-button>
-    </a-form-item>
   </a-form>
 </template>
 
 <script>
-import axios from 'axios';
+// TODO komentirao axios endpoint nije OK pa pravi console error kad se popravi vratiti
+// import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -88,159 +87,41 @@ export default {
       },
       results: [],
       labelCol: {
-        span: 4,
+        span: 8,
       },
       wrapperCol: {
-        span: 14,
+        span: 12,
       },
     };
   },
-  async created() {
-    try {
-      const res = await axios.get(
-        `https://beyond2.doc.ba/api/getEvents?user_id=` + '1'
-      );
-      console.log(res);
-      this.results = res.data;
-      console.log(this.results);
-    } catch (e) {
-      console.error(e);
-    }
-  },
-  emits: ['next-step'],
-  methods: {
-    nextStep() {
-      this.$emit('next-step');
-    },
-  },
+
+  // TODO komentirao axios endpoint nije OK pa pravi console error kad se popravi vratiti
+  // async created() {
+  //   try {
+  //     const res = await axios.get(
+  //       `https://beyond2.doc.ba/api/getEvents?user_id=` + '1'
+  //     );
+  //     console.log(res);
+  //     this.results = res.data;
+  //     console.log(this.results);
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // },
 };
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;1,100;1,200;1,300;1,400;1,500&display=swap');
-
-html,
-body {
-  font-family: 'Poppins', sans-serif;
+.phone-group .ant-select-selector {
+  height: 34px !important;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
-
-h1 {
-  /* position: absolute;
-    width: 291px;
-    height: 34px;
-    left: 645px;
-    top: 120px; */
-
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: normal;
-  font-size: 28px;
-  line-height: 34px;
-
-  color: #000000;
-}
-
-section {
-  padding: 60px;
-}
-
-a-input {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 8px 12px;
-
-  position: static;
-  width: 363px;
-  height: 40px;
-  left: 0px;
-  top: 0px;
-
-  /* Gray / gray-1 */
-  background: #ffffff;
-  /* Gray / gray-5 */
-  border: 1px solid #d9d9d9;
-  box-sizing: border-box;
-  border-radius: 2px;
-
-  /* Inside Auto Layout */
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-  margin: 0px 0px;
-}
-
-.ant-form-item-explain,
-.ant-form-item-extra {
-  /* clear: both;
-    min-height: 24px;
-    color: rgba(0, 0, 0, 0.45);
-    font-size: 14px;
-    line-height: 1.5715;
-    transition: color 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
-    padding-top: 0px; */
-  position: static;
-  width: 363px;
-  height: 22px;
-  left: 0px;
-  top: 2px;
-
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 300;
-  font-size: 12px;
-  line-height: 22px;
-  /* identical to box height, or 183% */
-
-  /* Gray / gray-7 */
-  color: #8c8c8c;
-
-  /* Inside Auto Layout */
-  flex: none;
-  order: 0;
-  flex-grow: 1;
-  margin: 0px 0px;
-}
-
-.ant-form-item-with-help {
-  margin-bottom: 20px;
-}
-
-.ant-input {
-  font-family: Poppins;
-  font-style: normal;
-  font-weight: 300;
-  font-size: 14px;
-  line-height: 24px;
-  /* identical to box height, or 171% */
-
-  /* Gray / gray-7 */
-  color: #8c8c8c;
-}
-
-.ant-steps-item-title {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 24px;
-  /* identical to box height, or 150% */
-
-  /* Gray / gray-9 */
-  color: #262626;
-
-  /* Inside Auto Layout */
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
-  margin: 8px 0px;
-}
-
-.ant-steps-item-content {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 4px 0px 12px;
+.phone-group .ant-select-single .ant-select-selector .ant-select-selection-item,
+.phone-group
+  .ant-select-single
+  .ant-select-selector
+  .ant-select-selection-placeholder {
+  line-height: 34px !important;
 }
 </style>

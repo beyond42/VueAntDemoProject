@@ -14,11 +14,6 @@
     >
       <a-input v-model:value="formState.boothsNo" placeholder="NO of booths" />
     </a-form-item>
-
-    <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-      <a-button type="primary" @click="previousStep">Previous</a-button>
-      <a-button type="primary" @click="onSubmit">Submit</a-button>
-    </a-form-item>
   </a-form>
 </template>
 
@@ -27,24 +22,15 @@ export default {
   data() {
     return {
       labelCol: {
-        span: 4,
+        span: 8,
       },
       wrapperCol: {
-        span: 14,
+        span: 12,
       },
       formState: {
         boothsNo: '',
       },
     };
-  },
-  emits: ['next-step'],
-  methods: {
-    previousStep() {
-      this.$emit('previous-step');
-    },
-    onSubmit() {
-      console.log('Submit');
-    },
   },
 };
 </script>

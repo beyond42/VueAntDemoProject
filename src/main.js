@@ -15,6 +15,10 @@ import {
   Checkbox,
   Space,
   TimePicker,
+  Image,
+  Icon,
+  message,
+  notification,
 } from 'ant-design-vue';
 
 import App from './App.vue';
@@ -22,18 +26,22 @@ import FriendContact from './components/FriendsApp/FriendContact.vue';
 import NewFriend from './components/FriendsApp/NewFriend.vue';
 
 import User from './components/User.vue';
+import EventInfo from './components/EventInfo.vue';
 import EventDetails from './components/EventDetails.vue';
 import FutureVirtualExperience from './components/FutureVirtualExperience.vue';
 import GeneralLayout from './components/GeneralLayout.vue';
+import NextPrev from './components/NextPrev.vue';
 
 const app = createApp(App);
 
 app.component('friend-contact', FriendContact);
 app.component('new-friend', NewFriend);
 app.component('user', User);
+app.component('event-info', EventInfo);
 app.component('event-details', EventDetails);
 app.component('future-virtual-experience', FutureVirtualExperience);
 app.component('general-layout', GeneralLayout);
+app.component('next-previous', NextPrev);
 
 app.use(Button);
 app.use(Input);
@@ -49,5 +57,9 @@ app.use(Steps);
 app.use(Checkbox);
 app.use(Space);
 app.use(TimePicker);
+app.use(Image);
+app.use(Icon);
+app.config.globalProperties.$message = message;
+app.config.globalProperties.$notification = notification;
 
 app.mount('#app');
