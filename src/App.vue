@@ -9,7 +9,11 @@
 
       <a-row :gutter="16" justify="center">
         <a-col class="gutter-row" :span="12">
-          <user v-if="current === 0" @next-step="nextStep"></user>
+          <user
+            v-if="current === 0"
+            @next-step="nextStep"
+            @user-submit="userSubmit"
+          ></user>
           <event-info
             v-if="current === 1"
             @next-step="nextStep"
@@ -116,12 +120,59 @@ export default {
   },
 
   async created() {
-    try {
-      const res = await axios.get(`http://localhost:3000/users`);
-      this.results = res.data;
-    } catch (e) {
-      console.error(e);
-    }
+    // try {
+    //   const res = await axios.get(`http://localhost:3000/users`);
+    //   this.results = res.data;
+    // } catch (e) {
+    //   console.error(e);
+    // }
+    const eventData = {
+      event_name: 'Test Vue Event',
+      is_first_event: 'yes',
+      event_logo: null,
+      days_of_event: 20,
+      start_date: null,
+      end_date: null,
+      starting_time: null,
+      user_firstname: 'Petar',
+      user_lastname: 'Petrovic',
+      company_name: 'Moja kompanija',
+      user_email: 'testpera@mail.com',
+      user_phone_number: '+38234534533',
+      attendeesNo: 50,
+      attendees_location: 'Location',
+      exhibitionersNo: '300',
+      official_event_website_url: 'www.test.com',
+      event_hosting: 'no',
+      event_domain: '',
+      is_event_opened: 0,
+      event_areas: 'areas',
+      boothsNo: 20,
+      multiple_types_of_booths: 1,
+      live_or_recorded_content: 'live',
+      live_parallel_sessions: 1,
+      streamingEventsTool: 'zoom',
+    };
+    await axios
+      .post(`https://beyond2.doc.ba/api/postEventData/`, eventData)
+      .then((response) => {
+        console.log('proslo');
+        console.log(response);
+      })
+      .catch((err) => console.log(err.response.data));
+    // console.log(res.data);
+    // console.log(eventData);
+    // this.results = [...this.results, res.data];
+    // const res = await fetch('https://beyond2.doc.ba/api/postEventData', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-type': 'application/json',
+    //   },
+    //   body: JSON.stringify(eventData),
+    // });
+    // const data = await res.json();
+    // console.log(data.data);
+    // this.events = data.data
   },
 
   methods: {
@@ -180,6 +231,10 @@ export default {
     },
     success() {
       this.$message.success('This is a success message');
+    },
+    userSubmit(formState) {
+      console.log('user submitted');
+      console.log(formState);
     },
   },
 };

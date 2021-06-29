@@ -17,6 +17,7 @@ import {
   TimePicker,
   Image,
   Icon,
+  Radio,
   message,
   notification,
 } from 'ant-design-vue';
@@ -57,6 +58,7 @@ app.use(Steps);
 app.use(Checkbox);
 app.use(Space);
 app.use(TimePicker);
+app.use(Radio);
 app.use(Image);
 app.use(Icon);
 app.config.globalProperties.$message = message;

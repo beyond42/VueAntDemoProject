@@ -4,6 +4,7 @@
     :model="formState"
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
+    @submit="userSubmit"
   >
     <a-form-item
       ref="name"
@@ -93,6 +94,12 @@ export default {
         span: 12,
       },
     };
+  },
+  emits: ['user-submit'],
+  methods: {
+    userSubmit() {
+      this.$emit('user-submit', this.formState);
+    },
   },
 
   // TODO komentirao axios endpoint nije OK pa pravi console error kad se popravi vratiti
