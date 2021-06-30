@@ -21,7 +21,10 @@
       name="firstEvent"
       required
     >
-      <a-checkbox-group v-model:value="checkedList" :options="plainOptions" />
+      <a-checkbox-group
+        v-model:value="formState.checkedList"
+        :options="plainOptions"
+      />
     </a-form-item>
 
     <a-form-item ref="eventLogo" label="Event logo" name="eventLogo" required>
@@ -88,17 +91,38 @@
         :second-step="10"
       />
     </a-form-item>
+
+    <a-row :gutter="[0, 16]" justify="center">
+      <a-col class="gutter-row" :span="10">
+        <a-form-item>
+          <a-button-group>
+            <a-button type="primary" @click="previousStep">
+              <LeftOutlined /> Previous
+            </a-button>
+            <a-button type="primary" @click="nextStep">
+              Next <RightOutlined />
+            </a-button>
+          </a-button-group>
+        </a-form-item>
+      </a-col>
+    </a-row>
   </a-form>
 </template>
 
 <script>
-import { InboxOutlined } from '@ant-design/icons-vue';
+import {
+  InboxOutlined,
+  LeftOutlined,
+  RightOutlined,
+} from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   components: {
     InboxOutlined,
+    LeftOutlined,
+    RightOutlined,
   },
 
   data() {
@@ -115,13 +139,13 @@ export default defineComponent({
         startDate: '',
         endDate: '',
         time: '',
+        checkedList: [],
       },
       plainOptions: ['Yes', 'No'],
-      checkedList: [],
       fileList: ref([]),
     };
   },
-
+  emits: ['event-info-submit'],
   methods: {
     handleChange(info) {
       const status = info.file.status;
@@ -143,6 +167,9 @@ export default defineComponent({
     handleEndOpenChange(date, dateString) {
       this.formState.endDate = dateString;
       console.log(date, dateString);
+    },
+    nextStep() {
+      this.$emit('event-info-submit', this.formState);
     },
   },
 });

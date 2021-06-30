@@ -9,16 +9,8 @@
 
       <a-row :gutter="16" justify="center">
         <a-col class="gutter-row" :span="12">
-          <user
-            v-if="current === 0"
-            @next-step="nextStep"
-            @user-submit="userSubmit"
-          ></user>
-          <event-info
-            v-if="current === 1"
-            @next-step="nextStep"
-            @previous-step="previousStep"
-          >
+          <user v-if="current === 0" @user-submit="userSubmit"></user>
+          <event-info v-if="current === 1" @event-info-submit="eventInfoSubmit">
           </event-info>
           <event-details
             v-if="current === 2"
@@ -49,7 +41,7 @@
         </a-col>
       </a-row>
 
-      <a-row :gutter="[0, 16]" justify="center">
+      <!-- <a-row :gutter="[0, 16]" justify="center">
         <a-col class="gutter-row" :span="10">
           <a-form-item>
             <a-button-group>
@@ -73,17 +65,17 @@
             </a-button-group>
           </a-form-item>
         </a-col>
-      </a-row>
+      </a-row> -->
     </a-form>
   </section>
 </template>
 
 <script>
-import {
-  LeftOutlined,
-  RightOutlined,
-  SaveOutlined,
-} from '@ant-design/icons-vue';
+// import {
+//   LeftOutlined,
+//   RightOutlined,
+//   SaveOutlined,
+// } from '@ant-design/icons-vue';
 
 import axios from 'axios';
 import User from './components/User.vue';
@@ -99,9 +91,9 @@ export default {
     EventDetails,
     FutureVirtualExperience,
     GeneralLayout,
-    LeftOutlined,
-    RightOutlined,
-    SaveOutlined,
+    // LeftOutlined,
+    // RightOutlined,
+    // SaveOutlined,
   },
 
   data() {
@@ -116,6 +108,33 @@ export default {
       ],
       imageSrc: '',
       current: 0,
+      event: {
+        event_name: '',
+        is_first_event: '',
+        event_logo: null,
+        days_of_event: 0,
+        start_date: '2021-07-06',
+        end_date: '2021-07-08',
+        starting_time: '12:00',
+        user_firstname: '',
+        user_lastname: '',
+        company_name: '',
+        user_email: '',
+        user_phone_number: '',
+        attendeesNo: 0,
+        attendees_location: '',
+        exhibitionersNo: '',
+        official_event_website_url: '',
+        event_hosting: '',
+        event_domain: '',
+        is_event_opened: 0,
+        event_areas: '',
+        boothsNo: 0,
+        multiple_types_of_booths: 0,
+        live_or_recorded_content: '',
+        live_parallel_sessions: 0,
+        streamingEventsTool: '',
+      },
     };
   },
 
@@ -131,9 +150,9 @@ export default {
       is_first_event: 'yes',
       event_logo: null,
       days_of_event: 20,
-      start_date: null,
-      end_date: null,
-      starting_time: null,
+      start_date: '2021-07-06',
+      end_date: '2021-07-08',
+      starting_time: '12:00',
       user_firstname: 'Petar',
       user_lastname: 'Petrovic',
       company_name: 'Moja kompanija',
@@ -221,20 +240,34 @@ export default {
       return JSON.parse(window.localStorage.getItem(imgSrc));
     },
 
-    nextStep() {
-      this.current++;
-      console.log(this.current);
-    },
+    // nextStep() {
+    //   this.current++;
+    // },
     previousStep() {
       this.current--;
-      console.log(this.current);
     },
     success() {
       this.$message.success('This is a success message');
     },
     userSubmit(formState) {
-      console.log('user submitted');
+      this.current++;
+      this.event.user_firstname = formState.name;
+      this.event.user_lastname = formState.last_name;
+      this.event.company_name = formState.company;
+      this.event.user_email = formState.email;
+      this.event.user_phone_number =
+        formState.country_code + formState.phone_num;
+      console.log(this.event);
+    },
+    eventInfoSubmit(formState) {
+      this.current++;
+      this.event.eventName = formState.eventName;
+      this.event.days_of_event = formState.noOfDays;
+      this.event.start_date = formState.startDate._d;
+      this.event.end_date = formState.endDate;
+      this.event.starting_time = formState.time;
       console.log(formState);
+      console.log(this.event);
     },
   },
 };
