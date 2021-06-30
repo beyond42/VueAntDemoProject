@@ -36,11 +36,13 @@
 
         <a-col class="gutter-row" :span="6">
           <a-steps v-model:current="current" direction="vertical">
-            <a-step title="Personal information" />
+            <a-step v-for="titles in titles" :key="titles" :title="titles" />
+
+            <!-- <a-step title="Personal information" />
             <a-step title="Event information" />
             <a-step title="Event details" />
             <a-step title="Future virtual experience" />
-            <a-step title="General layout of virtual event" />
+            <a-step title="General layout of virtual event" /> -->
           </a-steps>
         </a-col>
       </a-row>
