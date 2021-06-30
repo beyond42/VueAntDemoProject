@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import './main.css';
 
 import {
   Button,
