@@ -321,7 +321,7 @@ export default {
       this.current++;
       this.event.boothsNo = formState.boothsNo;
       for (const area in formState.areasofEventCheckedList) {
-        this.event.event_areas += area;
+        this.event.event_areas += formState.areasofEventCheckedList[area];
         this.event.event_areas += ', ';
       }
       this.event.multiple_types_of_booths =
