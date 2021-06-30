@@ -11,7 +11,10 @@
       name="domainForEvent"
       required
     >
-      <a-radio-group v-model:value="domainForEvent" :options="domainForEvent" />
+      <a-radio-group
+        v-model:value="formState.domainForEvent"
+        :options="domainForEvent"
+      />
     </a-form-item>
 
     <a-form-item
@@ -33,7 +36,10 @@
       name="typeOfEvent"
       required
     >
-      <a-radio-group v-model:value="typeOfEvent" :options="typeOfEvent" />
+      <a-radio-group
+        v-model:value="formState.typeOfEvent"
+        :options="typeOfEvent"
+      />
     </a-form-item>
 
     <a-row :gutter="[0, 16]" justify="center">

@@ -68,6 +68,18 @@
     </a-form-item>
 
     <a-form-item
+      ref="preferredTool"
+      label="Preferred tool for live-streaming:"
+      name="preferredTool"
+      required
+    >
+      <a-radio-group
+        v-model:value="formState.preferredTool"
+        :options="preferredTool"
+      />
+    </a-form-item>
+
+    <a-form-item
       ref="eventAgenda"
       label="Event Agenda"
       name="eventAgenda"
@@ -130,6 +142,7 @@ export default defineComponent({
         eventHaveMultipleBooths: ref(1).value,
         liveRecorded: ref(1).value,
         parallelSessions: ref(1).value,
+        preferredTool: ref(1).value,
       },
       areasOfEvent: [
         'External venue design',
@@ -141,14 +154,13 @@ export default defineComponent({
       eventHaveMultipleBooths: ['Yes', 'No'],
       liveRecorded: ['Live', 'Recorded', 'Both'],
       parallelSessions: ['Yes', 'No'],
+      preferredTool: ['No', 'Zoom', 'YouTube', 'Microsoft Teams', 'Other'],
     };
   },
+  emits: ['general-layout-submit'],
   methods: {
     onSubmit() {
-      //this.$emit('general-layout-submit', this.formState);
-      setTimeout(() => {
-        this.$message.success('This is a success message');
-      }, 1000);
+      this.$emit('general-layout-submit', this.formState);
     },
     previousStep() {
       this.$emit('general-layout-previous', this.formState);

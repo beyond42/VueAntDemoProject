@@ -33,6 +33,7 @@
             @general-layout-submit="generalLayoutSubmit"
             @general-layout-previous="generalLayoutPrevious"
           ></general-layout>
+          <finish v-if="current === 5" :message="submitMessage"></finish>
         </a-col>
 
         <a-col class="gutter-row" :span="6">
@@ -41,32 +42,6 @@
           </a-steps>
         </a-col>
       </a-row>
-
-      <!-- <a-row :gutter="[0, 16]" justify="center">
-        <a-col class="gutter-row" :span="10">
-          <a-form-item>
-            <a-button-group>
-              <a-button v-if="current > 0" type="primary" @click="previousStep">
-                <LeftOutlined /> Previous
-              </a-button>
-              <a-button
-                v-if="current < titles.length - 1"
-                type="primary"
-                @click="nextStep"
-              >
-                Next <RightOutlined />
-              </a-button>
-              <a-button
-                v-if="current == titles.length - 1"
-                type="primary"
-                @click="success"
-              >
-                Submit <SaveOutlined />
-              </a-button>
-            </a-button-group>
-          </a-form-item>
-        </a-col>
-      </a-row> -->
     </a-form>
   </section>
 </template>
@@ -78,6 +53,7 @@ import EventInfo from './components/EventInfo.vue';
 import EventDetails from './components/EventDetails.vue';
 import FutureVirtualExperience from './components/FutureVirtualExperience.vue';
 import GeneralLayout from './components/GeneralLayout.vue';
+import Finish from './components/Finish.vue';
 
 export default {
   components: {
@@ -86,6 +62,7 @@ export default {
     EventDetails,
     FutureVirtualExperience,
     GeneralLayout,
+    Finish,
   },
 
   data() {
@@ -103,11 +80,11 @@ export default {
       event: {
         event_name: '',
         is_first_event: '',
-        event_logo: null,
+        event_logo: '',
         days_of_event: 0,
-        start_date: '2021-07-06',
-        end_date: '2021-07-08',
-        starting_time: '12:00',
+        start_date: '',
+        end_date: '',
+        starting_time: '',
         user_firstname: '',
         user_lastname: '',
         company_name: '',
@@ -127,120 +104,10 @@ export default {
         live_parallel_sessions: 0,
         streamingEventsTool: '',
       },
+      submitMessage: '',
     };
   },
-
-  async created() {
-    // try {
-    //   const res = await axios.get(`http://localhost:3000/users`);
-    //   this.results = res.data;
-    // } catch (e) {
-    //   console.error(e);
-    // }
-    // const eventData = {
-    //   event_name: 'Test Vue Event',
-    //   is_first_event: 'yes',
-    //   event_logo: '',
-    //   days_of_event: 20,
-    //   start_date: '2021-07-06',
-    //   end_date: '2021-07-08',
-    //   starting_time: '12:00',
-    //   user_firstname: 'Petar',
-    //   user_lastname: 'Petrovic',
-    //   company_name: 'Moja kompanija',
-    //   user_email: 'testpera@mail.com',
-    //   user_phone_number: '+38234534533',
-    //   attendeesNo: 50,
-    //   attendees_location: 'Location',
-    //   exhibitionersNo: '300',
-    //   official_event_website_url: 'www.test.com',
-    //   event_hosting: 'no',
-    //   event_domain: '',
-    //   is_event_opened: 0,
-    //   event_areas: 'areas',
-    //   boothsNo: 20,
-    //   multiple_types_of_booths: 1,
-    //   live_or_recorded_content: 'live',
-    //   live_parallel_sessions: 1,
-    //   streamingEventsTool: 'zoom',
-    // };
-    // console.log(JSON.stringify(eventData));
-    // await axios
-    //   .post(
-    //     `https://beyond2.doc.ba/api/postEventData/`,
-    //     JSON.stringify(eventData)
-    //   )
-    //   .then((response) => {
-    //     console.log('proslo');
-    //     console.log(response);
-    //   })
-    //   .catch((err) => console.log(err.response.data));
-    // console.log(res.data);
-    // console.log(eventData);
-    // this.results = [...this.results, res.data];
-    // const res = await fetch('https://beyond2.doc.ba/api/postEventData', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-type': 'application/json',
-    //   },
-    //   body: JSON.stringify(eventData),
-    // });
-    // const data = await res.json();
-    // console.log(data.data);
-    // this.events = data.data
-  },
-
   methods: {
-    async toggleFavoriteStatus(friendId) {
-      const identifiedFriend = this.results.find(
-        friend => friend.id === friendId,
-      );
-      identifiedFriend.isFavorite = !identifiedFriend.isFavorite;
-      await axios
-        .patch('http://localhost:3000/users/' + friendId, {
-          isFavorite: identifiedFriend.isFavorite,
-        })
-        .then(response => {
-          console.log(response);
-        })
-        .catch(err => console.log(err.response.data));
-    },
-    async addContact(name, phone, email, date, imgSrc) {
-      const newFriendContact = {
-        id: new Date().toISOString(),
-        name: name,
-        phone: phone,
-        email: email,
-        isFavorite: false,
-        date: date,
-        imgSrc: imgSrc,
-      };
-      const res = await axios.post(
-        `http://localhost:3000/users`,
-        newFriendContact,
-      );
-      this.results = [...this.results, res.data];
-    },
-    deleteContact(friendId) {
-      axios.delete('http://localhost:3000/users/' + friendId).then(response => {
-        this.results = this.results.filter(friend => friend.id !== friendId);
-        console.log(response);
-        console.log(this.results);
-      });
-    },
-    findImg(imgSrc) {
-      return JSON.parse(window.localStorage.getItem(imgSrc));
-    },
-
-    // nextStep() {
-    //   this.current++;
-    // },
-    previousStep() {
-      this.current--;
-    },
-    success() {
-      this.$message.success('This is a success message');
-    },
     userSubmit(formState) {
       this.current++;
       this.event.user_firstname = formState.name;
@@ -258,28 +125,28 @@ export default {
     },
     eventInfoSubmit(formState) {
       this.current++;
-      this.event.eventName = formState.eventName;
+      this.event.event_name = formState.eventName;
       this.event.days_of_event = formState.noOfDays;
       this.event.start_date = formState.startDate.format('YYYY-MM-DD');
       this.event.end_date = formState.endDate.format('YYYY-MM-DD');
-      this.event.starting_time = formState.time.format('HH:MM:SS');
-      this.event.is_first_event = formState.checkedList[0];
-      this.event.event_logo = formState.eventImage;
+      this.event.starting_time = formState.timeOfEvent.format('HH:MM:SS');
+      this.event.is_first_event = formState.firstEvent;
+      // TODO: Vratiti kada bude proradio insert image-a
+      // this.event.event_logo = formState.eventImage;
       console.log(formState);
       console.log(this.event);
     },
     eventDetailsPrevious(formState) {
       this.current--;
-      console.log('previous');
       console.log(formState);
     },
     eventDetailsSubmit(formState) {
       this.current++;
-      this.event.exhibitionersNo = formState.exhibitionersNo;
-      this.event.event_hosting = formState.officialWebsiteCheckedList[0];
-      this.event.attendeesNo = formState.attendeesNo;
+      this.event.exhibitionersNo = formState.noOfExhibitioners;
+      this.event.event_hosting = formState.officialWebsite;
+      this.event.attendeesNo = formState.noOfAttendees;
 
-      //TODO: officialWebsiteCheckedList je ostao neupisan nigde
+      //TODO: expoFeature je ostao neupisan nigde
 
       console.log(formState);
       console.log(this.event);
@@ -292,32 +159,86 @@ export default {
     futureExpirienceSubmit(formState) {
       this.current++;
       this.event.event_domain = formState.domainSubdomainName;
-      this.event.is_event_opened = formState.typeOfEventCheckedList[0];
-      this.event.event_hosting = formState.checkedList[0];
-
-      //TODO: officialWebsiteCheckedList je ostao neupisan nigde
+      this.event.is_event_opened = formState.typeOfEvent;
+      this.event.event_hosting = formState.domainForEvent;
 
       console.log(formState);
       console.log(this.event);
     },
     generalLayoutSubmit(formState) {
       this.current++;
-      this.event.boothsNo = formState.boothsNo;
-      for (const area in formState.areasofEventCheckedList) {
-        this.event.event_areas += formState.areasofEventCheckedList[area];
+      this.event.boothsNo = formState.noOfBooths;
+      for (const area in formState.areasOfEvent) {
+        this.event.event_areas += formState.areasOfEvent[area];
         this.event.event_areas += ', ';
       }
-      this.event.multiple_types_of_booths =
-        formState.multipleBoothsCheckedList[0];
+      this.event.multiple_types_of_booths = formState.eventHaveMultipleBooths;
       this.event.live_or_recorded_content = formState.liveRecorded;
-      this.event.live_parallel_sessions = formState.parallelsessions;
+      this.event.live_parallel_sessions = formState.parallelSessions;
+      this.event.streamingEventsTool = formState.preferredTool;
       console.log(formState);
       console.log(this.event);
+      this.submitEventData(this.event);
     },
     generalLayoutPrevious(formState) {
       this.current--;
       console.log('previous');
       console.log(formState);
+    },
+    submitEventData(ev) {
+      // MARK: ovaj event prolazi
+      // const ev = {
+      //   attendeesNo: 99,
+      //   attendees_location: '',
+      //   boothsNo: 77,
+      //   company_name: 'Beyond',
+      //   days_of_event: 88,
+      //   end_date: '2021-06-20',
+      //   event_areas: 'External venue design, Conference rooms, Other, ',
+      //   event_domain: 'www.ivanatest.com',
+      //   event_hosting: 'Yes',
+      //   event_logo: '',
+      //   event_name: 'my event vue app 1',
+      //   exhibitionersNo: '66',
+      //   is_event_opened: 'Closed',
+      //   is_first_event: 'Yes',
+      //   live_or_recorded_content: 'Live',
+      //   live_parallel_sessions: 'Yes',
+      //   multiple_types_of_booths: 'Yes',
+      //   official_event_website_url: '',
+      //   start_date: '2021-06-01',
+      //   starting_time: '22:06:00',
+      //   streamingEventsTool: 'zoom',
+      //   user_email: 'ilic.adam03@gmail.com',
+      //   user_firstname: 'Petar',
+      //   user_lastname: 'Petrovic',
+      //   user_phone_number: '+38177777777777',
+      // };
+
+      console.log(JSON.stringify(ev));
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+
+      axios
+        .post('https://beyond2.doc.ba/api/postEventData', JSON.stringify(ev), {
+          headers: headers,
+        })
+        .then(response => {
+          console.log(response);
+          this.submitMessage =
+            'Thank you for submitting your information! We will be in touch with you shortly.';
+          setTimeout(() => {
+            this.$message.success('Event is successfully submitted!');
+          }, 1000);
+        })
+        .catch(err => {
+          console.log(err.response.data);
+          this.submitMessage = 'Error! Please, try again.';
+          setTimeout(() => {
+            this.$message.error('Error! Please, try again.');
+          }, 1000);
+        });
     },
   },
 };

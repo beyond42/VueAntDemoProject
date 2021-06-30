@@ -32,6 +32,7 @@ import EventInfo from './components/EventInfo.vue';
 import EventDetails from './components/EventDetails.vue';
 import FutureVirtualExperience from './components/FutureVirtualExperience.vue';
 import GeneralLayout from './components/GeneralLayout.vue';
+import Finish from './components/Finish.vue';
 import NextPrev from './components/NextPrev.vue';
 
 const app = createApp(App);
@@ -44,6 +45,7 @@ app.component('event-details', EventDetails);
 app.component('future-virtual-experience', FutureVirtualExperience);
 app.component('general-layout', GeneralLayout);
 app.component('next-previous', NextPrev);
+app.component('finish', Finish);
 
 app.use(Button);
 app.use(Input);

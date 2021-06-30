@@ -4,7 +4,6 @@
     :model="formState"
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
-    @submit="userSubmit"
   >
     <a-form-item
       ref="name"

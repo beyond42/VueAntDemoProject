@@ -154,6 +154,9 @@ export default defineComponent({
     handleChange(info) {
       const status = info.file.status;
 
+      console.log('info');
+      console.log(info);
+
       if (status !== 'uploading') {
         console.log(info.file, info.fileList);
       }
