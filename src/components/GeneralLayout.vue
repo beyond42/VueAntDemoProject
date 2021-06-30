@@ -8,56 +8,51 @@
     <a-form-item
       ref="noOfBooths"
       label="Number of booths"
-      name="boothsNo"
+      name="noOfBooths"
       required
       help="Please enter how many booths you will have"
     >
-      <a-input v-model:value="formState.boothsNo" placeholder="NO of booths" />
+      <a-input-number
+        v-model:value="formState.noOfBooths"
+        :min="1"
+        placeholder="No of booths"
+      />
     </a-form-item>
 
     <a-form-item
-      ref="areasofEvent"
-      class="areasofenvent"
+      ref="areasOfEvent"
       label="Areas of event should feature"
-      name="areasofEvent"
+      name="areasOfEvent"
       required
     >
       <a-checkbox-group
-        v-model:value="formState.areasofEventCheckedList"
-        :options="areasofEventOptions"
+        v-model:value="formState.areasOfEvent"
+        :options="areasOfEvent"
       />
     </a-form-item>
 
     <a-form-item
-      ref="multipleBooths"
+      ref="eventHaveMultipleBooths"
       label="Will your event have multiple booths"
-      name="multipleBooths"
+      name="eventHaveMultipleBooths"
       required
     >
-<<<<<<< HEAD
       <a-radio-group
-        v-model:value="multipleBoothsCheckedList"
-=======
-      <a-checkbox-group
-        v-model:value="formState.multipleBoothsCheckedList"
->>>>>>> 89ca5542b03a231c5a5d44239473fb6f2e677445
-        :options="multipleBoothsOptions"
+        v-model:value="formState.eventHaveMultipleBooths"
+        :options="eventHaveMultipleBooths"
       />
     </a-form-item>
 
-<<<<<<< HEAD
     <a-form-item
-      ref="liveStreamRecord"
+      ref="liveRecorded"
       label="Live stream or recorded"
-      name="liveStreamRecord"
+      name="liveRecorded"
       required
     >
       <a-radio-group
-        class="liveStream"
-        v-model:value="liveStreamRecordRadio"
-        :options="liveStreamRecordRadioOptions"
-      >
-      </a-radio-group>
+        v-model:value="formState.liveRecorded"
+        :options="liveRecorded"
+      />
     </a-form-item>
 
     <a-form-item
@@ -67,33 +62,14 @@
       required
     >
       <a-radio-group
-        class="parallelsessions"
-        v-model:value="parallelSessionsRadio"
-        :options="parallelSessionsRadioOptions"
-      >
-      </a-radio-group>
+        v-model:value="formState.parallelSessions"
+        :options="parallelSessions"
+      />
     </a-form-item>
 
-=======
-    <a-step title="Live stream or recorded" class="liveStreamTitle" />
-    <a-radio-group
-      v-model:value="formState.liveRecorded"
-      :options="liveRecorded"
-      class="liveStream"
-    >
-    </a-radio-group>
-    <a-step title="Parrallel sessions" class="parallelsessionsTitle" />
-    <a-radio-group
-      v-model:value="formState.parallelsessions"
-      :options="plainOptions"
-      class="parallelsessions"
-    >
-    </a-radio-group>
->>>>>>> 89ca5542b03a231c5a5d44239473fb6f2e677445
     <a-form-item
       ref="eventAgenda"
       label="Event Agenda"
-      class="eventAgenda"
       name="eventAgenda"
       required
     >
@@ -105,7 +81,7 @@
         @change="handleChange"
       >
         <p class="ant-upload-drag-icon">
-          <inbox-outlined></inbox-outlined>
+          <inbox-outlined />
         </p>
         <p class="ant-upload-text">Click or drag file to this area to upload</p>
         <p class="ant-upload-hint">
@@ -114,15 +90,16 @@
         </p>
       </a-upload-dragger>
     </a-form-item>
+
     <a-row :gutter="[0, 16]" justify="center">
-      <a-col class="gutter-row" :span="10">
+      <a-col class="gutter-row" :span="labelCol.span">
         <a-form-item>
           <a-button-group>
             <a-button type="primary" @click="previousStep">
               <LeftOutlined /> Previous
             </a-button>
-            <a-button type="primary" @click="nextStep">
-              Next <RightOutlined />
+            <a-button type="primary" @click.prevent="onSubmit">
+              Submit <SaveOutlined />
             </a-button>
           </a-button-group>
         </a-form-item>
@@ -132,12 +109,12 @@
 </template>
 
 <script>
-import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
+import { LeftOutlined, SaveOutlined } from '@ant-design/icons-vue';
 import { defineComponent, ref } from 'vue';
 export default defineComponent({
   components: {
     LeftOutlined,
-    RightOutlined,
+    SaveOutlined,
   },
   data() {
     return {
@@ -148,52 +125,30 @@ export default defineComponent({
         span: 12,
       },
       formState: {
-        boothsNo: '',
-<<<<<<< HEAD
-      },
-
-=======
-        areasofEventCheckedList: [],
-        multipleBoothsCheckedList: [],
+        noOfBooths: '',
+        areasOfEvent: [],
+        eventHaveMultipleBooths: ref(1).value,
         liveRecorded: ref(1).value,
-        parallelsessions: ref(1).value,
+        parallelSessions: ref(1).value,
       },
-      plainOptions: ['Yes', 'No'],
->>>>>>> 89ca5542b03a231c5a5d44239473fb6f2e677445
-      areasofEventOptions: [
+      areasOfEvent: [
         'External venue design',
         'Lobby/Info desk',
         'Conference rooms',
         'Expo halls with booths',
         'Other',
       ],
-<<<<<<< HEAD
-      areasofEventCheckedList: [],
-
-      multipleBoothsOptions: ['Yes', 'No'],
-      multipleBoothsCheckedList: [],
-
-      liveStreamRecordRadioOptions: ['Live', 'Recorded', 'Both'],
-      liveStreamRecordRadio: [],
-
-      parallelSessionsRadioOptions: ['Yes', 'No'],
-      parallelSessionsRadio: [],
-
-      plainOptions: ['Yes', 'No'],
-      checkedList: [],
-
-      plainOptionsBooths: ['Yes', 'No'],
-      checkedBoothsList: [],
-=======
-      plainOptionsBooths: ['Yes', 'No'],
-      multipleBoothsOptions: ['Yes', 'No'],
+      eventHaveMultipleBooths: ['Yes', 'No'],
       liveRecorded: ['Live', 'Recorded', 'Both'],
->>>>>>> 89ca5542b03a231c5a5d44239473fb6f2e677445
+      parallelSessions: ['Yes', 'No'],
     };
   },
   methods: {
-    nextStep() {
-      this.$emit('general-layout-submit', this.formState);
+    onSubmit() {
+      //this.$emit('general-layout-submit', this.formState);
+      setTimeout(() => {
+        this.$message.success('This is a success message');
+      }, 1000);
     },
     previousStep() {
       this.$emit('general-layout-previous', this.formState);
@@ -202,22 +157,8 @@ export default defineComponent({
 });
 </script>
 
-<style>
-/* .liveStream {
-  margin-left: 145px;
+<style scoped>
+.ant-input-number {
+  min-width: 150px;
 }
-.liveStreamTitle {
-  position: absolute;
-}
-.parallelsessionsTitle {
-  margin-top: 24px;
-}
-.parallelsessions {
-  position: absolute;
-  top: 248px;
-  left: 152px;
-}
-.eventAgenda {
-  margin-top: 24px;
-} */
 </style>

@@ -6,9 +6,9 @@
     :wrapper-col="wrapperCol"
   >
     <a-form-item
-      ref="name"
+      ref="eventName"
       label="Event name"
-      name="name"
+      name="eventName"
       required
       help="Please provide us with your event name"
     >
@@ -21,9 +21,9 @@
       name="firstEvent"
       required
     >
-      <a-checkbox-group
-        v-model:value="formState.checkedList"
-        :options="plainOptions"
+      <a-radio-group
+        v-model:value="formState.firstEvent"
+        :options="firstEvent"
       />
     </a-form-item>
 
@@ -53,7 +53,11 @@
       required
       help="Please enter how many days event will last"
     >
-      <a-input v-model:value="formState.noOfDays" placeholder="NO of days" />
+      <a-input-number
+        v-model:value="formState.noOfDays"
+        :min="1"
+        placeholder="No of days"
+      />
     </a-form-item>
 
     <a-form-item
@@ -79,21 +83,21 @@
     </a-form-item>
 
     <a-form-item
-      ref="time"
+      ref="timeOfEvent"
       label="Starting time of event"
-      name="time"
+      name="timeOfEvent"
       required
       help="Please enter at what time event will start"
     >
       <a-time-picker
-        v-model:value="formState.time"
+        v-model:value="formState.timeOfEvent"
         :minute-step="15"
         :second-step="10"
       />
     </a-form-item>
 
     <a-row :gutter="[0, 16]" justify="center">
-      <a-col class="gutter-row" :span="10">
+      <a-col class="gutter-row" :span="labelCol.span">
         <a-form-item>
           <a-button-group>
             <a-button type="primary" @click="previousStep">
@@ -134,14 +138,14 @@ export default defineComponent({
       },
       formState: {
         eventName: '',
+        firstEvent: ref(1).value,
+        eventImage: '',
         noOfDays: '',
         startDate: '',
         endDate: '',
-        time: '',
-        checkedList: [],
-        eventImage: '',
+        timeOfEvent: '',
       },
-      plainOptions: ['Yes', 'No'],
+      firstEvent: ['Yes', 'No'],
       fileList: ref([]),
     };
   },
@@ -179,4 +183,8 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style scoped>
+.ant-input-number {
+  min-width: 150px;
+}
+</style>

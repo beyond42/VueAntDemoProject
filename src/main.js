@@ -4,10 +4,10 @@ import './main.css';
 import {
   Button,
   Input,
+  InputNumber,
   Form,
   Layout,
   DatePicker,
-  InputNumber,
   Upload,
   Row,
   Col,

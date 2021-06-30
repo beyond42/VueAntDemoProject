@@ -11,7 +11,7 @@
       name="domainForEvent"
       required
     >
-      <a-checkbox-group v-model:value="checkedList" :options="plainOptions" />
+      <a-radio-group v-model:value="domainForEvent" :options="domainForEvent" />
     </a-form-item>
 
     <a-form-item
@@ -33,14 +33,11 @@
       name="typeOfEvent"
       required
     >
-      <a-checkbox-group
-        v-model:value="typeOfEventCheckedList"
-        :options="typeOfEventOptions"
-      />
+      <a-radio-group v-model:value="typeOfEvent" :options="typeOfEvent" />
     </a-form-item>
 
     <a-row :gutter="[0, 16]" justify="center">
-      <a-col class="gutter-row" :span="10">
+      <a-col class="gutter-row" :span="labelCol.span">
         <a-form-item>
           <a-button-group>
             <a-button type="primary" @click="previousStep">
@@ -58,7 +55,7 @@
 
 <script>
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 export default defineComponent({
   components: {
     LeftOutlined,
@@ -73,12 +70,12 @@ export default defineComponent({
         span: 12,
       },
       formState: {
+        domainForEvent: ref(1).value,
         domainSubdomainName: '',
-        checkedList: [],
-        typeOfEventCheckedList: [],
+        typeOfEvent: ref(1).value,
       },
-      plainOptions: ['Yes', 'No'],
-      typeOfEventOptions: ['Opened', 'Closed'],
+      domainForEvent: ['Yes', 'No'],
+      typeOfEvent: ['Opened', 'Closed'],
     };
   },
   methods: {

@@ -38,12 +38,6 @@
         <a-col class="gutter-row" :span="6">
           <a-steps v-model:current="current" direction="vertical">
             <a-step v-for="titles in titles" :key="titles" :title="titles" />
-
-            <!-- <a-step title="Personal information" />
-            <a-step title="Event information" />
-            <a-step title="Event details" />
-            <a-step title="Future virtual experience" />
-            <a-step title="General layout of virtual event" /> -->
           </a-steps>
         </a-col>
       </a-row>
@@ -78,12 +72,6 @@
 </template>
 
 <script>
-// import {
-//   LeftOutlined,
-//   RightOutlined,
-//   SaveOutlined,
-// } from '@ant-design/icons-vue';
-
 import axios from 'axios';
 import User from './components/User.vue';
 import EventInfo from './components/EventInfo.vue';
@@ -98,9 +86,6 @@ export default {
     EventDetails,
     FutureVirtualExperience,
     GeneralLayout,
-    // LeftOutlined,
-    // RightOutlined,
-    // SaveOutlined,
   },
 
   data() {
@@ -208,17 +193,17 @@ export default {
   methods: {
     async toggleFavoriteStatus(friendId) {
       const identifiedFriend = this.results.find(
-        (friend) => friend.id === friendId
+        friend => friend.id === friendId,
       );
       identifiedFriend.isFavorite = !identifiedFriend.isFavorite;
       await axios
         .patch('http://localhost:3000/users/' + friendId, {
           isFavorite: identifiedFriend.isFavorite,
         })
-        .then((response) => {
+        .then(response => {
           console.log(response);
         })
-        .catch((err) => console.log(err.response.data));
+        .catch(err => console.log(err.response.data));
     },
     async addContact(name, phone, email, date, imgSrc) {
       const newFriendContact = {
@@ -232,20 +217,16 @@ export default {
       };
       const res = await axios.post(
         `http://localhost:3000/users`,
-        newFriendContact
+        newFriendContact,
       );
       this.results = [...this.results, res.data];
     },
     deleteContact(friendId) {
-      axios
-        .delete('http://localhost:3000/users/' + friendId)
-        .then((response) => {
-          this.results = this.results.filter(
-            (friend) => friend.id !== friendId
-          );
-          console.log(response);
-          console.log(this.results);
-        });
+      axios.delete('http://localhost:3000/users/' + friendId).then(response => {
+        this.results = this.results.filter(friend => friend.id !== friendId);
+        console.log(response);
+        console.log(this.results);
+      });
     },
     findImg(imgSrc) {
       return JSON.parse(window.localStorage.getItem(imgSrc));

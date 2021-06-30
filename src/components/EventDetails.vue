@@ -8,11 +8,15 @@
     <a-form-item
       ref="noOfAttendees"
       label="Number of attendees"
-      name="attendeesNo"
+      name="noOfAttendees"
       required
       help="Please provide us with number of attendees you expect"
     >
-      <a-input v-model:value="formState.attendeesNo" placeholder="NO" />
+      <a-input-number
+        v-model:value="formState.noOfAttendees"
+        :min="1"
+        placeholder="No"
+      />
     </a-form-item>
 
     <a-form-item
@@ -21,20 +25,24 @@
       name="expoFeature"
       required
     >
-      <a-checkbox-group
-        v-model:value="formState.expoFeatureCheckedList"
-        :options="plainOptions"
+      <a-radio-group
+        v-model:value="formState.expoFeature"
+        :options="expoFeature"
       />
     </a-form-item>
 
     <a-form-item
       ref="noOfExhibitioners"
       label="Number of exhibitioners"
-      name="exhibitionersNo"
+      name="noOfExhibitioners"
       required
       help="Please provide us with number of exhibitioners you expect"
     >
-      <a-input v-model:value="formState.exhibitionersNo" placeholder="NO" />
+      <a-input-number
+        v-model:value="formState.noOfExhibitioners"
+        :min="1"
+        placeholder="No"
+      />
     </a-form-item>
 
     <a-form-item
@@ -43,14 +51,14 @@
       name="officialWebsite"
       required
     >
-      <a-checkbox-group
-        v-model:value="formState.officialWebsiteCheckedList"
-        :options="plainOptions"
+      <a-radio-group
+        v-model:value="formState.officialWebsite"
+        :options="officialWebsite"
       />
     </a-form-item>
 
     <a-row :gutter="[0, 16]" justify="center">
-      <a-col class="gutter-row" :span="10">
+      <a-col class="gutter-row" :span="labelCol.span">
         <a-form-item>
           <a-button-group>
             <a-button type="primary" @click="previousStep">
@@ -68,7 +76,7 @@
 
 <script>
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 export default defineComponent({
   components: {
     LeftOutlined,
@@ -83,12 +91,13 @@ export default defineComponent({
         span: 12,
       },
       formState: {
-        attendeesNo: '',
-        exhibitionersNo: '',
-        officialWebsiteCheckedList: [],
-        expoFeatureCheckedList: [],
+        noOfAttendees: '',
+        expoFeature: ref(1).value,
+        noOfExhibitioners: '',
+        officialWebsite: ref(1).value,
       },
-      plainOptions: ['Yes', 'No'],
+      expoFeature: ['Yes', 'No'],
+      officialWebsite: ['Yes', 'No'],
     };
   },
   emits: ['event-details-submit', 'event-details-previous'],
@@ -111,4 +120,8 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style scoped>
+.ant-input-number {
+  min-width: 150px;
+}
+</style>

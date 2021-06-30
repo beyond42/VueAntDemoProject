@@ -68,7 +68,7 @@
       </a-input-group>
     </a-form-item>
     <a-row :gutter="[0, 16]" justify="center">
-      <a-col class="gutter-row" :span="10">
+      <a-col class="gutter-row" :span="labelCol.span">
         <a-form-item>
           <a-button-group>
             <a-button type="primary" @click="nextStep">
