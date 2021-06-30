@@ -24,13 +24,14 @@
           </event-details>
           <future-virtual-experience
             v-if="current === 3"
-            @next-step="nextStep"
-            @previous-step="previousStep"
+            @future-expirience-submit="futureExpirienceSubmit"
+            @future-expirience-previous="futureExpiriencePrevious"
           >
           </future-virtual-experience>
           <general-layout
             v-if="current === 4"
-            @previous-step="previousStep"
+            @general-layout-submit="generalLayoutSubmit"
+            @general-layout-previous="generalLayoutPrevious"
           ></general-layout>
         </a-col>
 
@@ -299,6 +300,41 @@ export default {
 
       console.log(formState);
       console.log(this.event);
+    },
+    futureExpiriencePrevious(formState) {
+      this.current--;
+      console.log('previous');
+      console.log(formState);
+    },
+    futureExpirienceSubmit(formState) {
+      this.current++;
+      this.event.event_domain = formState.domainSubdomainName;
+      this.event.is_event_opened = formState.typeOfEventCheckedList[0];
+      this.event.event_hosting = formState.checkedList[0];
+
+      //TODO: officialWebsiteCheckedList je ostao neupisan nigde
+
+      console.log(formState);
+      console.log(this.event);
+    },
+    generalLayoutSubmit(formState) {
+      this.current++;
+      this.event.boothsNo = formState.boothsNo;
+      for (const area in formState.areasofEventCheckedList) {
+        this.event.event_areas += area;
+        this.event.event_areas += ', ';
+      }
+      this.event.multiple_types_of_booths =
+        formState.multipleBoothsCheckedList[0];
+      this.event.live_or_recorded_content = formState.liveRecorded;
+      this.event.live_parallel_sessions = formState.parallelsessions;
+      console.log(formState);
+      console.log(this.event);
+    },
+    generalLayoutPrevious(formState) {
+      this.current--;
+      console.log('previous');
+      console.log(formState);
     },
   },
 };

@@ -23,7 +23,7 @@
       required
     >
       <a-checkbox-group
-        v-model:value="areasofEventCheckedList"
+        v-model:value="formState.areasofEventCheckedList"
         :options="areasofEventOptions"
       />
     </a-form-item>
@@ -34,21 +34,24 @@
       required
     >
       <a-checkbox-group
-        v-model:value="multipleBoothsCheckedList"
+        v-model:value="formState.multipleBoothsCheckedList"
         :options="multipleBoothsOptions"
       />
     </a-form-item>
 
     <a-step title="Live stream or recorded" class="liveStreamTitle" />
-    <a-radio-group v-model:value="value" class="liveStream">
-      <a-radio :style="radioStyle" :value="1">Live</a-radio>
-      <a-radio :style="radioStyle" :value="2">Recorded</a-radio>
-      <a-radio :style="radioStyle" :value="3">Both</a-radio>
+    <a-radio-group
+      v-model:value="formState.liveRecorded"
+      :options="liveRecorded"
+      class="liveStream"
+    >
     </a-radio-group>
     <a-step title="Parrallel sessions" class="parallelsessionsTitle" />
-    <a-radio-group v-model:value="value" class="parallelsessions">
-      <a-radio :style="radioStyle" :value="1">Yes</a-radio>
-      <a-radio :style="radioStyle" :value="2">No</a-radio>
+    <a-radio-group
+      v-model:value="formState.parallelsessions"
+      :options="plainOptions"
+      class="parallelsessions"
+    >
     </a-radio-group>
     <a-form-item
       ref="eventAgenda"
@@ -74,11 +77,31 @@
         </p>
       </a-upload-dragger>
     </a-form-item>
+    <a-row :gutter="[0, 16]" justify="center">
+      <a-col class="gutter-row" :span="10">
+        <a-form-item>
+          <a-button-group>
+            <a-button type="primary" @click="previousStep">
+              <LeftOutlined /> Previous
+            </a-button>
+            <a-button type="primary" @click="nextStep">
+              Next <RightOutlined />
+            </a-button>
+          </a-button-group>
+        </a-form-item>
+      </a-col>
+    </a-row>
   </a-form>
 </template>
 
 <script>
-export default {
+import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  components: {
+    LeftOutlined,
+    RightOutlined,
+  },
   data() {
     return {
       labelCol: {
@@ -88,27 +111,34 @@ export default {
         span: 12,
       },
       formState: {
-        boothsNo: "",
+        boothsNo: '',
+        areasofEventCheckedList: [],
+        multipleBoothsCheckedList: [],
+        liveRecorded: ref(1).value,
+        parallelsessions: ref(1).value,
       },
-
-      plainOptions: ["Yes", "No"],
+      plainOptions: ['Yes', 'No'],
       areasofEventOptions: [
-        "External venue design",
-        "Lobby/Info desk",
-        "Conference rooms",
-        "Expo halls with booths",
-        "Other",
+        'External venue design',
+        'Lobby/Info desk',
+        'Conference rooms',
+        'Expo halls with booths',
+        'Other',
       ],
-      checkedList: [],
-      areasofEventCheckedList: [],
-
-      plainOptionsBooths: ["Yes", "No"],
-      multipleBoothsOptions: ["Yes", "No"],
-      checkedBoothsList: [],
-      multipleBoothsCheckedList: [],
+      plainOptionsBooths: ['Yes', 'No'],
+      multipleBoothsOptions: ['Yes', 'No'],
+      liveRecorded: ['Live', 'Recorded', 'Both'],
     };
   },
-};
+  methods: {
+    nextStep() {
+      this.$emit('general-layout-submit', this.formState);
+    },
+    previousStep() {
+      this.$emit('general-layout-previous', this.formState);
+    },
+  },
+});
 </script>
 
 <style>
