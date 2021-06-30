@@ -10,12 +10,16 @@
       <a-row :gutter="16" justify="center">
         <a-col class="gutter-row" :span="12">
           <user v-if="current === 0" @user-submit="userSubmit"></user>
-          <event-info v-if="current === 1" @event-info-submit="eventInfoSubmit">
+          <event-info
+            v-if="current === 1"
+            @event-info-submit="eventInfoSubmit"
+            @event-info-previous="eventInfoPrevious"
+          >
           </event-info>
           <event-details
             v-if="current === 2"
-            @next-step="nextStep"
-            @previous-step="previousStep"
+            @event-details-submit="eventDetailsSubmit"
+            @event-details-previous="eventDetailsPrevious"
           >
           </event-details>
           <future-virtual-experience
@@ -145,40 +149,44 @@ export default {
     // } catch (e) {
     //   console.error(e);
     // }
-    const eventData = {
-      event_name: 'Test Vue Event',
-      is_first_event: 'yes',
-      event_logo: null,
-      days_of_event: 20,
-      start_date: '2021-07-06',
-      end_date: '2021-07-08',
-      starting_time: '12:00',
-      user_firstname: 'Petar',
-      user_lastname: 'Petrovic',
-      company_name: 'Moja kompanija',
-      user_email: 'testpera@mail.com',
-      user_phone_number: '+38234534533',
-      attendeesNo: 50,
-      attendees_location: 'Location',
-      exhibitionersNo: '300',
-      official_event_website_url: 'www.test.com',
-      event_hosting: 'no',
-      event_domain: '',
-      is_event_opened: 0,
-      event_areas: 'areas',
-      boothsNo: 20,
-      multiple_types_of_booths: 1,
-      live_or_recorded_content: 'live',
-      live_parallel_sessions: 1,
-      streamingEventsTool: 'zoom',
-    };
-    await axios
-      .post(`https://beyond2.doc.ba/api/postEventData/`, eventData)
-      .then((response) => {
-        console.log('proslo');
-        console.log(response);
-      })
-      .catch((err) => console.log(err.response.data));
+    // const eventData = {
+    //   event_name: 'Test Vue Event',
+    //   is_first_event: 'yes',
+    //   event_logo: '',
+    //   days_of_event: 20,
+    //   start_date: '2021-07-06',
+    //   end_date: '2021-07-08',
+    //   starting_time: '12:00',
+    //   user_firstname: 'Petar',
+    //   user_lastname: 'Petrovic',
+    //   company_name: 'Moja kompanija',
+    //   user_email: 'testpera@mail.com',
+    //   user_phone_number: '+38234534533',
+    //   attendeesNo: 50,
+    //   attendees_location: 'Location',
+    //   exhibitionersNo: '300',
+    //   official_event_website_url: 'www.test.com',
+    //   event_hosting: 'no',
+    //   event_domain: '',
+    //   is_event_opened: 0,
+    //   event_areas: 'areas',
+    //   boothsNo: 20,
+    //   multiple_types_of_booths: 1,
+    //   live_or_recorded_content: 'live',
+    //   live_parallel_sessions: 1,
+    //   streamingEventsTool: 'zoom',
+    // };
+    // console.log(JSON.stringify(eventData));
+    // await axios
+    //   .post(
+    //     `https://beyond2.doc.ba/api/postEventData/`,
+    //     JSON.stringify(eventData)
+    //   )
+    //   .then((response) => {
+    //     console.log('proslo');
+    //     console.log(response);
+    //   })
+    //   .catch((err) => console.log(err.response.data));
     // console.log(res.data);
     // console.log(eventData);
     // this.results = [...this.results, res.data];
@@ -259,13 +267,36 @@ export default {
         formState.country_code + formState.phone_num;
       console.log(this.event);
     },
+    eventInfoPrevious(formState) {
+      this.current--;
+      console.log('previous');
+      console.log(formState);
+    },
     eventInfoSubmit(formState) {
       this.current++;
       this.event.eventName = formState.eventName;
       this.event.days_of_event = formState.noOfDays;
-      this.event.start_date = formState.startDate._d;
-      this.event.end_date = formState.endDate;
-      this.event.starting_time = formState.time;
+      this.event.start_date = formState.startDate.format('YYYY-MM-DD');
+      this.event.end_date = formState.endDate.format('YYYY-MM-DD');
+      this.event.starting_time = formState.time.format('HH:MM:SS');
+      this.event.is_first_event = formState.checkedList[0];
+      this.event.event_logo = formState.eventImage;
+      console.log(formState);
+      console.log(this.event);
+    },
+    eventDetailsPrevious(formState) {
+      this.current--;
+      console.log('previous');
+      console.log(formState);
+    },
+    eventDetailsSubmit(formState) {
+      this.current++;
+      this.event.exhibitionersNo = formState.exhibitionersNo;
+      this.event.event_hosting = formState.officialWebsiteCheckedList[0];
+      this.event.attendeesNo = formState.attendeesNo;
+
+      //TODO: officialWebsiteCheckedList je ostao neupisan nigde
+
       console.log(formState);
       console.log(this.event);
     },

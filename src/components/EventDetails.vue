@@ -22,7 +22,7 @@
       required
     >
       <a-checkbox-group
-        v-model:value="expoFeatureCheckedList"
+        v-model:value="formState.expoFeatureCheckedList"
         :options="plainOptions"
       />
     </a-form-item>
@@ -44,15 +44,36 @@
       required
     >
       <a-checkbox-group
-        v-model:value="officialWebsiteCheckedList"
+        v-model:value="formState.officialWebsiteCheckedList"
         :options="plainOptions"
       />
     </a-form-item>
+
+    <a-row :gutter="[0, 16]" justify="center">
+      <a-col class="gutter-row" :span="10">
+        <a-form-item>
+          <a-button-group>
+            <a-button type="primary" @click="previousStep">
+              <LeftOutlined /> Previous
+            </a-button>
+            <a-button type="primary" @click="nextStep">
+              Next <RightOutlined />
+            </a-button>
+          </a-button-group>
+        </a-form-item>
+      </a-col>
+    </a-row>
   </a-form>
 </template>
 
 <script>
-export default {
+import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
+import { defineComponent } from 'vue';
+export default defineComponent({
+  components: {
+    LeftOutlined,
+    RightOutlined,
+  },
   data() {
     return {
       labelCol: {
@@ -64,14 +85,13 @@ export default {
       formState: {
         attendeesNo: '',
         exhibitionersNo: '',
+        officialWebsiteCheckedList: [],
+        expoFeatureCheckedList: [],
       },
       plainOptions: ['Yes', 'No'],
-      checkedList: [],
-      officialWebsiteCheckedList: [],
-      expoFeatureCheckedList: [],
     };
   },
-
+  emits: ['event-details-submit', 'event-details-previous'],
   methods: {
     handleStartOpenChange(date, dateString) {
       this.formState.startDate = dateString;
@@ -81,8 +101,14 @@ export default {
       this.formState.endDate = dateString;
       console.log(date, dateString);
     },
+    nextStep() {
+      this.$emit('event-details-submit', this.formState);
+    },
+    previousStep() {
+      this.$emit('event-details-previous', this.formState);
+    },
   },
-};
+});
 </script>
 
 <style></style>

@@ -140,12 +140,13 @@ export default defineComponent({
         endDate: '',
         time: '',
         checkedList: [],
+        eventImage: '',
       },
       plainOptions: ['Yes', 'No'],
       fileList: ref([]),
     };
   },
-  emits: ['event-info-submit'],
+  emits: ['event-info-submit', 'event-info-previous'],
   methods: {
     handleChange(info) {
       const status = info.file.status;
@@ -156,6 +157,7 @@ export default defineComponent({
 
       if (status === 'done') {
         message.success(`${info.file.name} file uploaded successfully.`);
+        this.formState.eventImage = info.file;
       } else if (status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
       }
@@ -170,6 +172,9 @@ export default defineComponent({
     },
     nextStep() {
       this.$emit('event-info-submit', this.formState);
+    },
+    previousStep() {
+      this.$emit('event-info-previous', this.formState);
     },
   },
 });
