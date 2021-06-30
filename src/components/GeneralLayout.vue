@@ -23,7 +23,7 @@
       required
     >
       <a-checkbox-group
-        v-model:value="areasofEventCheckedList"
+        v-model:value="formState.areasofEventCheckedList"
         :options="areasofEventOptions"
       />
     </a-form-item>
@@ -34,12 +34,18 @@
       name="multipleBooths"
       required
     >
+<<<<<<< HEAD
       <a-radio-group
         v-model:value="multipleBoothsCheckedList"
+=======
+      <a-checkbox-group
+        v-model:value="formState.multipleBoothsCheckedList"
+>>>>>>> 89ca5542b03a231c5a5d44239473fb6f2e677445
         :options="multipleBoothsOptions"
       />
     </a-form-item>
 
+<<<<<<< HEAD
     <a-form-item
       ref="liveStreamRecord"
       label="Live stream or recorded"
@@ -68,6 +74,22 @@
       </a-radio-group>
     </a-form-item>
 
+=======
+    <a-step title="Live stream or recorded" class="liveStreamTitle" />
+    <a-radio-group
+      v-model:value="formState.liveRecorded"
+      :options="liveRecorded"
+      class="liveStream"
+    >
+    </a-radio-group>
+    <a-step title="Parrallel sessions" class="parallelsessionsTitle" />
+    <a-radio-group
+      v-model:value="formState.parallelsessions"
+      :options="plainOptions"
+      class="parallelsessions"
+    >
+    </a-radio-group>
+>>>>>>> 89ca5542b03a231c5a5d44239473fb6f2e677445
     <a-form-item
       ref="eventAgenda"
       label="Event Agenda"
@@ -92,11 +114,31 @@
         </p>
       </a-upload-dragger>
     </a-form-item>
+    <a-row :gutter="[0, 16]" justify="center">
+      <a-col class="gutter-row" :span="10">
+        <a-form-item>
+          <a-button-group>
+            <a-button type="primary" @click="previousStep">
+              <LeftOutlined /> Previous
+            </a-button>
+            <a-button type="primary" @click="nextStep">
+              Next <RightOutlined />
+            </a-button>
+          </a-button-group>
+        </a-form-item>
+      </a-col>
+    </a-row>
   </a-form>
 </template>
 
 <script>
-export default {
+import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  components: {
+    LeftOutlined,
+    RightOutlined,
+  },
   data() {
     return {
       labelCol: {
@@ -107,8 +149,17 @@ export default {
       },
       formState: {
         boothsNo: '',
+<<<<<<< HEAD
       },
 
+=======
+        areasofEventCheckedList: [],
+        multipleBoothsCheckedList: [],
+        liveRecorded: ref(1).value,
+        parallelsessions: ref(1).value,
+      },
+      plainOptions: ['Yes', 'No'],
+>>>>>>> 89ca5542b03a231c5a5d44239473fb6f2e677445
       areasofEventOptions: [
         'External venue design',
         'Lobby/Info desk',
@@ -116,6 +167,7 @@ export default {
         'Expo halls with booths',
         'Other',
       ],
+<<<<<<< HEAD
       areasofEventCheckedList: [],
 
       multipleBoothsOptions: ['Yes', 'No'],
@@ -132,9 +184,22 @@ export default {
 
       plainOptionsBooths: ['Yes', 'No'],
       checkedBoothsList: [],
+=======
+      plainOptionsBooths: ['Yes', 'No'],
+      multipleBoothsOptions: ['Yes', 'No'],
+      liveRecorded: ['Live', 'Recorded', 'Both'],
+>>>>>>> 89ca5542b03a231c5a5d44239473fb6f2e677445
     };
   },
-};
+  methods: {
+    nextStep() {
+      this.$emit('general-layout-submit', this.formState);
+    },
+    previousStep() {
+      this.$emit('general-layout-previous', this.formState);
+    },
+  },
+});
 </script>
 
 <style>

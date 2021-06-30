@@ -38,11 +38,32 @@
         :options="typeOfEventOptions"
       />
     </a-form-item>
+
+    <a-row :gutter="[0, 16]" justify="center">
+      <a-col class="gutter-row" :span="10">
+        <a-form-item>
+          <a-button-group>
+            <a-button type="primary" @click="previousStep">
+              <LeftOutlined /> Previous
+            </a-button>
+            <a-button type="primary" @click="nextStep">
+              Next <RightOutlined />
+            </a-button>
+          </a-button-group>
+        </a-form-item>
+      </a-col>
+    </a-row>
   </a-form>
 </template>
 
 <script>
-export default {
+import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
+import { defineComponent } from 'vue';
+export default defineComponent({
+  components: {
+    LeftOutlined,
+    RightOutlined,
+  },
   data() {
     return {
       labelCol: {
@@ -53,14 +74,22 @@ export default {
       },
       formState: {
         domainSubdomainName: '',
+        checkedList: [],
+        typeOfEventCheckedList: [],
       },
       plainOptions: ['Yes', 'No'],
       typeOfEventOptions: ['Opened', 'Closed'],
-      checkedList: [],
-      typeOfEventCheckedList: [],
     };
   },
-};
+  methods: {
+    nextStep() {
+      this.$emit('future-expirience-submit', this.formState);
+    },
+    previousStep() {
+      this.$emit('future-expirience-previous', this.formState);
+    },
+  },
+});
 </script>
 
 <style></style>
