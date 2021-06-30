@@ -115,7 +115,6 @@ import {
   LeftOutlined,
   RightOutlined,
 } from '@ant-design/icons-vue';
-import { message } from 'ant-design-vue';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
@@ -156,10 +155,10 @@ export default defineComponent({
       }
 
       if (status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully.`);
+        this.$message.success(`${info.file.name} file uploaded successfully.`);
         this.formState.eventImage = info.file;
       } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
+        this.$message.error(`${info.file.name} file upload failed.`);
       }
     },
     handleStartOpenChange(date, dateString) {
