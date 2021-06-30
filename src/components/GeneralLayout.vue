@@ -27,29 +27,47 @@
         :options="areasofEventOptions"
       />
     </a-form-item>
+
     <a-form-item
       ref="multipleBooths"
       label="Will your event have multiple booths"
       name="multipleBooths"
       required
     >
-      <a-checkbox-group
+      <a-radio-group
         v-model:value="multipleBoothsCheckedList"
         :options="multipleBoothsOptions"
       />
     </a-form-item>
 
-    <a-step title="Live stream or recorded" class="liveStreamTitle" />
-    <a-radio-group v-model:value="value" class="liveStream">
-      <a-radio :style="radioStyle" :value="1">Live</a-radio>
-      <a-radio :style="radioStyle" :value="2">Recorded</a-radio>
-      <a-radio :style="radioStyle" :value="3">Both</a-radio>
-    </a-radio-group>
-    <a-step title="Parrallel sessions" class="parallelsessionsTitle" />
-    <a-radio-group v-model:value="value" class="parallelsessions">
-      <a-radio :style="radioStyle" :value="1">Yes</a-radio>
-      <a-radio :style="radioStyle" :value="2">No</a-radio>
-    </a-radio-group>
+    <a-form-item
+      ref="liveStreamRecord"
+      label="Live stream or recorded"
+      name="liveStreamRecord"
+      required
+    >
+      <a-radio-group
+        class="liveStream"
+        v-model:value="liveStreamRecordRadio"
+        :options="liveStreamRecordRadioOptions"
+      >
+      </a-radio-group>
+    </a-form-item>
+
+    <a-form-item
+      ref="parallelSessions"
+      label="Parrallel sessions"
+      name="parallelSessions"
+      required
+    >
+      <a-radio-group
+        class="parallelsessions"
+        v-model:value="parallelSessionsRadio"
+        :options="parallelSessionsRadioOptions"
+      >
+      </a-radio-group>
+    </a-form-item>
+
     <a-form-item
       ref="eventAgenda"
       label="Event Agenda"
@@ -88,31 +106,39 @@ export default {
         span: 12,
       },
       formState: {
-        boothsNo: "",
+        boothsNo: '',
       },
 
-      plainOptions: ["Yes", "No"],
       areasofEventOptions: [
-        "External venue design",
-        "Lobby/Info desk",
-        "Conference rooms",
-        "Expo halls with booths",
-        "Other",
+        'External venue design',
+        'Lobby/Info desk',
+        'Conference rooms',
+        'Expo halls with booths',
+        'Other',
       ],
-      checkedList: [],
       areasofEventCheckedList: [],
 
-      plainOptionsBooths: ["Yes", "No"],
-      multipleBoothsOptions: ["Yes", "No"],
-      checkedBoothsList: [],
+      multipleBoothsOptions: ['Yes', 'No'],
       multipleBoothsCheckedList: [],
+
+      liveStreamRecordRadioOptions: ['Live', 'Recorded', 'Both'],
+      liveStreamRecordRadio: [],
+
+      parallelSessionsRadioOptions: ['Yes', 'No'],
+      parallelSessionsRadio: [],
+
+      plainOptions: ['Yes', 'No'],
+      checkedList: [],
+
+      plainOptionsBooths: ['Yes', 'No'],
+      checkedBoothsList: [],
     };
   },
 };
 </script>
 
 <style>
-.liveStream {
+/* .liveStream {
   margin-left: 145px;
 }
 .liveStreamTitle {
@@ -128,5 +154,5 @@ export default {
 }
 .eventAgenda {
   margin-top: 24px;
-}
+} */
 </style>
