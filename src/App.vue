@@ -9,17 +9,17 @@
 
       <a-row :gutter="16" justify="center">
         <a-col class="gutter-row" :span="12">
-          <user v-if="current === 0" @next-step="nextStep"></user>
+          <user v-if="current === 0" @user-submit="userSubmit"></user>
           <event-info
             v-if="current === 1"
-            @next-step="nextStep"
-            @previous-step="previousStep"
+            @event-info-submit="eventInfoSubmit"
+            @event-info-previous="eventInfoPrevious"
           >
           </event-info>
           <event-details
             v-if="current === 2"
-            @next-step="nextStep"
-            @previous-step="previousStep"
+            @event-details-submit="eventDetailsSubmit"
+            @event-details-previous="eventDetailsPrevious"
           >
           </event-details>
           <future-virtual-experience
@@ -45,7 +45,7 @@
         </a-col>
       </a-row>
 
-      <a-row :gutter="[0, 16]" justify="center">
+      <!-- <a-row :gutter="[0, 16]" justify="center">
         <a-col class="gutter-row" :span="10">
           <a-form-item>
             <a-button-group>
@@ -69,17 +69,17 @@
             </a-button-group>
           </a-form-item>
         </a-col>
-      </a-row>
+      </a-row> -->
     </a-form>
   </section>
 </template>
 
 <script>
-import {
-  LeftOutlined,
-  RightOutlined,
-  SaveOutlined,
-} from '@ant-design/icons-vue';
+// import {
+//   LeftOutlined,
+//   RightOutlined,
+//   SaveOutlined,
+// } from '@ant-design/icons-vue';
 
 import axios from 'axios';
 import User from './components/User.vue';
@@ -95,9 +95,9 @@ export default {
     EventDetails,
     FutureVirtualExperience,
     GeneralLayout,
-    LeftOutlined,
-    RightOutlined,
-    SaveOutlined,
+    // LeftOutlined,
+    // RightOutlined,
+    // SaveOutlined,
   },
 
   data() {
@@ -112,16 +112,94 @@ export default {
       ],
       imageSrc: '',
       current: 0,
+      event: {
+        event_name: '',
+        is_first_event: '',
+        event_logo: null,
+        days_of_event: 0,
+        start_date: '2021-07-06',
+        end_date: '2021-07-08',
+        starting_time: '12:00',
+        user_firstname: '',
+        user_lastname: '',
+        company_name: '',
+        user_email: '',
+        user_phone_number: '',
+        attendeesNo: 0,
+        attendees_location: '',
+        exhibitionersNo: '',
+        official_event_website_url: '',
+        event_hosting: '',
+        event_domain: '',
+        is_event_opened: 0,
+        event_areas: '',
+        boothsNo: 0,
+        multiple_types_of_booths: 0,
+        live_or_recorded_content: '',
+        live_parallel_sessions: 0,
+        streamingEventsTool: '',
+      },
     };
   },
 
   async created() {
-    try {
-      const res = await axios.get(`http://localhost:3000/users`);
-      this.results = res.data;
-    } catch (e) {
-      console.error(e);
-    }
+    // try {
+    //   const res = await axios.get(`http://localhost:3000/users`);
+    //   this.results = res.data;
+    // } catch (e) {
+    //   console.error(e);
+    // }
+    // const eventData = {
+    //   event_name: 'Test Vue Event',
+    //   is_first_event: 'yes',
+    //   event_logo: '',
+    //   days_of_event: 20,
+    //   start_date: '2021-07-06',
+    //   end_date: '2021-07-08',
+    //   starting_time: '12:00',
+    //   user_firstname: 'Petar',
+    //   user_lastname: 'Petrovic',
+    //   company_name: 'Moja kompanija',
+    //   user_email: 'testpera@mail.com',
+    //   user_phone_number: '+38234534533',
+    //   attendeesNo: 50,
+    //   attendees_location: 'Location',
+    //   exhibitionersNo: '300',
+    //   official_event_website_url: 'www.test.com',
+    //   event_hosting: 'no',
+    //   event_domain: '',
+    //   is_event_opened: 0,
+    //   event_areas: 'areas',
+    //   boothsNo: 20,
+    //   multiple_types_of_booths: 1,
+    //   live_or_recorded_content: 'live',
+    //   live_parallel_sessions: 1,
+    //   streamingEventsTool: 'zoom',
+    // };
+    // console.log(JSON.stringify(eventData));
+    // await axios
+    //   .post(
+    //     `https://beyond2.doc.ba/api/postEventData/`,
+    //     JSON.stringify(eventData)
+    //   )
+    //   .then((response) => {
+    //     console.log('proslo');
+    //     console.log(response);
+    //   })
+    //   .catch((err) => console.log(err.response.data));
+    // console.log(res.data);
+    // console.log(eventData);
+    // this.results = [...this.results, res.data];
+    // const res = await fetch('https://beyond2.doc.ba/api/postEventData', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-type': 'application/json',
+    //   },
+    //   body: JSON.stringify(eventData),
+    // });
+    // const data = await res.json();
+    // console.log(data.data);
+    // this.events = data.data
   },
 
   methods: {
@@ -170,16 +248,57 @@ export default {
       return JSON.parse(window.localStorage.getItem(imgSrc));
     },
 
-    nextStep() {
-      this.current++;
-      console.log(this.current);
-    },
+    // nextStep() {
+    //   this.current++;
+    // },
     previousStep() {
       this.current--;
-      console.log(this.current);
     },
     success() {
       this.$message.success('This is a success message');
+    },
+    userSubmit(formState) {
+      this.current++;
+      this.event.user_firstname = formState.name;
+      this.event.user_lastname = formState.last_name;
+      this.event.company_name = formState.company;
+      this.event.user_email = formState.email;
+      this.event.user_phone_number =
+        formState.country_code + formState.phone_num;
+      console.log(this.event);
+    },
+    eventInfoPrevious(formState) {
+      this.current--;
+      console.log('previous');
+      console.log(formState);
+    },
+    eventInfoSubmit(formState) {
+      this.current++;
+      this.event.eventName = formState.eventName;
+      this.event.days_of_event = formState.noOfDays;
+      this.event.start_date = formState.startDate.format('YYYY-MM-DD');
+      this.event.end_date = formState.endDate.format('YYYY-MM-DD');
+      this.event.starting_time = formState.time.format('HH:MM:SS');
+      this.event.is_first_event = formState.checkedList[0];
+      this.event.event_logo = formState.eventImage;
+      console.log(formState);
+      console.log(this.event);
+    },
+    eventDetailsPrevious(formState) {
+      this.current--;
+      console.log('previous');
+      console.log(formState);
+    },
+    eventDetailsSubmit(formState) {
+      this.current++;
+      this.event.exhibitionersNo = formState.exhibitionersNo;
+      this.event.event_hosting = formState.officialWebsiteCheckedList[0];
+      this.event.attendeesNo = formState.attendeesNo;
+
+      //TODO: officialWebsiteCheckedList je ostao neupisan nigde
+
+      console.log(formState);
+      console.log(this.event);
     },
   },
 };

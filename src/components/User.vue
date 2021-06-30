@@ -4,6 +4,7 @@
     :model="formState"
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
+    @submit="userSubmit"
   >
     <a-form-item
       ref="name"
@@ -52,7 +53,6 @@
       ref="phone"
       label="Phone number"
       name="phone"
-      required
       help="Please provide us your phone number"
     >
       <a-input-group class="phone-group" compact>
@@ -67,6 +67,17 @@
         />
       </a-input-group>
     </a-form-item>
+    <a-row :gutter="[0, 16]" justify="center">
+      <a-col class="gutter-row" :span="10">
+        <a-form-item>
+          <a-button-group>
+            <a-button type="primary" @click="nextStep">
+              Next <RightOutlined />
+            </a-button>
+          </a-button-group>
+        </a-form-item>
+      </a-col>
+    </a-row>
   </a-form>
 </template>
 
@@ -74,7 +85,12 @@
 // TODO komentirao axios endpoint nije OK pa pravi console error kad se popravi vratiti
 // import axios from 'axios';
 
+import { RightOutlined } from '@ant-design/icons-vue';
+
 export default {
+  components: {
+    RightOutlined,
+  },
   data() {
     return {
       formState: {
@@ -93,6 +109,12 @@ export default {
         span: 12,
       },
     };
+  },
+  emits: ['user-submit'],
+  methods: {
+    nextStep() {
+      this.$emit('user-submit', this.formState);
+    },
   },
 
   // TODO komentirao axios endpoint nije OK pa pravi console error kad se popravi vratiti
