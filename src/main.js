@@ -1,7 +1,11 @@
-import { createApp } from 'vue';
-import './main.css';
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
+import "./main.css";
 
+// AntDesign import only what we use
 import {
+  Menu,
   Button,
   Input,
   InputNumber,
@@ -21,32 +25,43 @@ import {
   Radio,
   message,
   notification,
-} from 'ant-design-vue';
+  Switch,
+} from "ant-design-vue";
 
-import App from './App.vue';
-import FriendContact from './components/FriendsApp/FriendContact.vue';
-import NewFriend from './components/FriendsApp/NewFriend.vue';
+// Components import
+import User from "./components/User.vue";
+import EventInfo from "./components/EventInfo.vue";
+import EventDetails from "./components/EventDetails.vue";
+import FutureVirtualExperience from "./components/FutureVirtualExperience.vue";
+import GeneralLayout from "./components/GeneralLayout.vue";
+import Finish from "./components/Finish.vue";
+import Test from "./components/Test.vue";
 
-import User from './components/User.vue';
-import EventInfo from './components/EventInfo.vue';
-import EventDetails from './components/EventDetails.vue';
-import FutureVirtualExperience from './components/FutureVirtualExperience.vue';
-import GeneralLayout from './components/GeneralLayout.vue';
-import Finish from './components/Finish.vue';
-import NextPrev from './components/NextPrev.vue';
+// Views import
+import HomePage from "./views/HomePage.vue";
+import TestPage from "./views/TestPage.vue";
 
+// Create App
 const app = createApp(App);
 
-app.component('friend-contact', FriendContact);
-app.component('new-friend', NewFriend);
-app.component('user', User);
-app.component('event-info', EventInfo);
-app.component('event-details', EventDetails);
-app.component('future-virtual-experience', FutureVirtualExperience);
-app.component('general-layout', GeneralLayout);
-app.component('next-previous', NextPrev);
-app.component('finish', Finish);
+// Component Register
+app.component("user", User);
+app.component("event-info", EventInfo);
+app.component("event-details", EventDetails);
+app.component("future-virtual-experience", FutureVirtualExperience);
+app.component("general-layout", GeneralLayout);
+app.component("next-previous", Test);
+app.component("finish", Finish);
 
+// Page Register
+app.component("home-page", HomePage);
+app.component("test-page", TestPage);
+
+// Router use
+app.use(router);
+
+// Antd use
+app.use(Menu);
 app.use(Button);
 app.use(Input);
 app.use(Form);
@@ -64,7 +79,9 @@ app.use(TimePicker);
 app.use(Radio);
 app.use(Image);
 app.use(Icon);
+app.use(Switch);
 app.config.globalProperties.$message = message;
 app.config.globalProperties.$notification = notification;
 
-app.mount('#app');
+// Mount App
+app.mount("#app");

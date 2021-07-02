@@ -3,99 +3,86 @@
     ref="formRef"
     :model="formState"
     :label-col="labelCol"
-    :wrapper-col="wrapperCol"
-  >
+    :wrapper-col="wrapperCol">
     <a-form-item
       ref="noOfBooths"
       label="Number of booths"
       name="noOfBooths"
       required
-      help="Please enter how many booths you will have"
-    >
+      help="Please enter how many booths you will have">
       <a-input-number
         v-model:value="formState.noOfBooths"
         :min="1"
-        placeholder="No of booths"
-      />
+        placeholder="No of booths"/>
     </a-form-item>
 
     <a-form-item
       ref="areasOfEvent"
       label="Areas of event should feature"
       name="areasOfEvent"
-      required
-    >
+      required>
       <a-checkbox-group
         v-model:value="formState.areasOfEvent"
-        :options="areasOfEvent"
-      />
+        :options="areasOfEvent"/>
     </a-form-item>
 
     <a-form-item
       ref="eventHaveMultipleBooths"
       label="Will your event have multiple booths"
       name="eventHaveMultipleBooths"
-      required
-    >
+      required>
       <a-radio-group
         v-model:value="formState.eventHaveMultipleBooths"
-        :options="eventHaveMultipleBooths"
-      />
+        :options="eventHaveMultipleBooths"/>
     </a-form-item>
 
     <a-form-item
       ref="liveRecorded"
       label="Live stream or recorded"
       name="liveRecorded"
-      required
-    >
+      required>
       <a-radio-group
         v-model:value="formState.liveRecorded"
-        :options="liveRecorded"
-      />
+        :options="liveRecorded"/>
     </a-form-item>
 
     <a-form-item
       ref="parallelSessions"
       label="Parrallel sessions"
       name="parallelSessions"
-      required
-    >
+      required>
       <a-radio-group
         v-model:value="formState.parallelSessions"
-        :options="parallelSessions"
-      />
+        :options="parallelSessions"/>
     </a-form-item>
 
     <a-form-item
       ref="preferredTool"
       label="Preferred tool for live-streaming:"
       name="preferredTool"
-      required
-    >
+      required>
       <a-radio-group
         v-model:value="formState.preferredTool"
-        :options="preferredTool"
-      />
+        :options="preferredTool"/>
     </a-form-item>
 
     <a-form-item
       ref="eventAgenda"
       label="Event Agenda"
       name="eventAgenda"
-      required
-    >
+      required>
       <a-upload-dragger
         v-model:fileList="fileList"
         name="file"
         :multiple="true"
         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-        @change="handleChange"
-      >
+        @change="handleChange">
         <p class="ant-upload-drag-icon">
           <inbox-outlined />
         </p>
-        <p class="ant-upload-text">Click or drag file to this area to upload</p>
+        <p class="ant-upload-text">
+          Click or drag file to this area to upload
+        </p>
         <p class="ant-upload-hint">
           Support for a single or bulk upload. Strictly prohibit from uploading
           company data or other band files

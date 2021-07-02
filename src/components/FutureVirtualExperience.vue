@@ -3,18 +3,15 @@
     ref="formRef"
     :model="formState"
     :label-col="labelCol"
-    :wrapper-col="wrapperCol"
-  >
+    :wrapper-col="wrapperCol">
     <a-form-item
       ref="domainForEvent"
       label="Domain for the event"
       name="domainForEvent"
-      required
-    >
+      required>
       <a-radio-group
         v-model:value="formState.domainForEvent"
-        :options="domainForEvent"
-      />
+        :options="domainForEvent"/>
     </a-form-item>
 
     <a-form-item
@@ -22,24 +19,20 @@
       label="Domain / subdomain name"
       name="domainSubdomainName"
       required
-      help="Please enter your own domain or subdomain for event"
-    >
+      help="Please enter your own domain or subdomain for event">
       <a-input
         v-model:value="formState.domainSubdomainName"
-        placeholder="example.com/example.collectivibe.com"
-      />
+        placeholder="example.com/example.collectivibe.com"/>
     </a-form-item>
 
     <a-form-item
       ref="typeOfEvent"
       label="Type of event"
       name="typeOfEvent"
-      required
-    >
+      required>
       <a-radio-group
         v-model:value="formState.typeOfEvent"
-        :options="typeOfEvent"
-      />
+        :options="typeOfEvent"/>
     </a-form-item>
 
     <a-row :gutter="[0, 16]" justify="center">

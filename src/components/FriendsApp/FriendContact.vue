@@ -1,25 +1,31 @@
 <template>
-    <a-col :flex="4" class="user-details">
-      <img id="coverImage" :src="imgSrc"/>
-      <h2>{{ name }} {{ isFavorite ? '(Favorite)' : ''}}</h2>
-      <a-button @click="toggleFavorite">Toggle favorite</a-button>
-      <a-button @click="toggleDetails">{{ detailsAreVisible ? 'Hide' : 'Show' }} Details</a-button>
-      <ul v-if="detailsAreVisible">
-        <li>
-          <strong>Phone:</strong>
-          {{ phoneNumber }}
-        </li>
-        <li>
-          <strong>Email:</strong>
-          {{ emailAddress }}
-        </li>
-        <li>
-          <strong>Date of birth:</strong>
-          {{ dateOfBirth }}
-        </li>
-      </ul>
-      <a-button @click="deleteFriend">Delete friend</a-button>
-    </a-col>
+  <a-col :flex="4" class="user-details">
+    <img id="coverImage" :src="imgSrc"/>
+    <h2>{{ name }} {{ isFavorite ? '(Favorite)' : ''}}</h2>
+    <a-button @click="toggleFavorite">
+      Toggle favorite
+    </a-button>
+    <a-button @click="toggleDetails">
+      {{ detailsAreVisible ? 'Hide' : 'Show' }} Details
+    </a-button>
+    <ul v-if="detailsAreVisible">
+      <li>
+        <strong>Phone:</strong>
+        {{ phoneNumber }}
+      </li>
+      <li>
+        <strong>Email:</strong>
+        {{ emailAddress }}
+      </li>
+      <li>
+        <strong>Date of birth:</strong>
+        {{ dateOfBirth }}
+      </li>
+    </ul>
+    <a-button @click="deleteFriend">
+      Delete friend
+    </a-button>
+  </a-col>
 </template>
 
 <script>

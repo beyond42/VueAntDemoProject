@@ -3,32 +3,27 @@
     ref="formRef"
     :model="formState"
     :label-col="labelCol"
-    :wrapper-col="wrapperCol"
-  >
+    :wrapper-col="wrapperCol">
     <a-form-item
       ref="noOfAttendees"
       label="Number of attendees"
       name="noOfAttendees"
       required
-      help="Please provide us with number of attendees you expect"
-    >
+      help="Please provide us with number of attendees you expect">
       <a-input-number
         v-model:value="formState.noOfAttendees"
         :min="1"
-        placeholder="No"
-      />
+        placeholder="No"/>
     </a-form-item>
 
     <a-form-item
       ref="expoFeature"
       label="Expo feature"
       name="expoFeature"
-      required
-    >
+      required>
       <a-radio-group
         v-model:value="formState.expoFeature"
-        :options="expoFeature"
-      />
+        :options="expoFeature"/>
     </a-form-item>
 
     <a-form-item
@@ -36,25 +31,21 @@
       label="Number of exhibitioners"
       name="noOfExhibitioners"
       required
-      help="Please provide us with number of exhibitioners you expect"
-    >
+      help="Please provide us with number of exhibitioners you expect">
       <a-input-number
         v-model:value="formState.noOfExhibitioners"
         :min="1"
-        placeholder="No"
-      />
+        placeholder="No"/>
     </a-form-item>
 
     <a-form-item
       ref="officialWebsite"
       label="Official website of event"
       name="officialWebsite"
-      required
-    >
+      required>
       <a-radio-group
         v-model:value="formState.officialWebsite"
-        :options="officialWebsite"
-      />
+        :options="officialWebsite"/>
     </a-form-item>
 
     <a-row :gutter="[0, 16]" justify="center">
