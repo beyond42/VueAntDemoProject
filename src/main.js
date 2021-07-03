@@ -5,37 +5,37 @@ import "./main.css";
 
 // AntDesign import only what we use
 import {
-  Menu,
+  alert,
   Button,
+  Checkbox,
+  Col,
+  DatePicker,
+  Form,
+  Icon,
+  Image,
   Input,
   InputNumber,
-  Form,
   Layout,
-  DatePicker,
-  Upload,
-  Row,
-  Col,
-  Select,
-  Steps,
-  Checkbox,
-  Space,
-  TimePicker,
-  Image,
-  Icon,
-  Radio,
+  Menu,
   message,
   notification,
+  Radio,
+  Row,
+  Select,
+  Space,
+  Steps,
   Switch,
+  TimePicker,
+  Upload,
 } from "ant-design-vue";
 
 // Components import
-import User from "./components/User.vue";
+import EventUserInfo from "./components/EventUserInfo.vue";
 import EventInfo from "./components/EventInfo.vue";
 import EventDetails from "./components/EventDetails.vue";
 import FutureVirtualExperience from "./components/FutureVirtualExperience.vue";
 import GeneralLayout from "./components/GeneralLayout.vue";
 import Finish from "./components/Finish.vue";
-import Test from "./components/Test.vue";
 
 // Views import
 import HomePage from "./views/HomePage.vue";
@@ -45,12 +45,11 @@ import TestPage from "./views/TestPage.vue";
 const app = createApp(App);
 
 // Component Register
-app.component("user", User);
+app.component("event-user-info", EventUserInfo);
 app.component("event-info", EventInfo);
 app.component("event-details", EventDetails);
 app.component("future-virtual-experience", FutureVirtualExperience);
 app.component("general-layout", GeneralLayout);
-app.component("next-previous", Test);
 app.component("finish", Finish);
 
 // Page Register
@@ -61,25 +60,28 @@ app.component("test-page", TestPage);
 app.use(router);
 
 // Antd use
-app.use(Menu);
+app.use(alert);
 app.use(Button);
-app.use(Input);
-app.use(Form);
-app.use(Layout);
-app.use(DatePicker);
-app.use(InputNumber);
-app.use(Upload);
-app.use(Row);
-app.use(Col);
-app.use(Select);
-app.use(Steps);
 app.use(Checkbox);
-app.use(Space);
-app.use(TimePicker);
-app.use(Radio);
-app.use(Image);
+app.use(Col);
+app.use(DatePicker);
+app.use(Form);
 app.use(Icon);
+app.use(Image);
+app.use(Input);
+app.use(InputNumber);
+app.use(Layout);
+app.use(Menu);
+app.use(Radio);
+app.use(Row);
+app.use(Select);
+app.use(Space);
+app.use(Steps);
 app.use(Switch);
+app.use(Upload);
+app.use(TimePicker);
+
+app.config.globalProperties.$alert = alert;
 app.config.globalProperties.$message = message;
 app.config.globalProperties.$notification = notification;
 

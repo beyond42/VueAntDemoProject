@@ -8,7 +8,10 @@
       </a-row>
       <a-row :gutter="16" justify="center">
         <a-col class="gutter-row" :span="12">
-          <user v-if="current === 0" @user-submit="userSubmit"></user>
+          <event-user-info
+            v-if="current === 0"
+            @user-submit="userSubmit">
+          </event-user-info>
           <event-info
             v-if="current === 1"
             @event-info-submit="eventInfoSubmit"
@@ -29,8 +32,7 @@
             @general-layout-submit="generalLayoutSubmit"
             @general-layout-previous="generalLayoutPrevious">
           </general-layout>
-          <test v-if="current === 5"></test>
-          <finish v-if="current === 6" :message="submitMessage"></finish>
+          <finish v-if="current === 5" :message="submitMessage"></finish>
         </a-col>
 
         <a-col class="gutter-row" :span="6">
@@ -45,23 +47,21 @@
 
 <script>
 import axios from "axios";
-import User from "../components/User.vue";
+import EventUserInfo from "../components/EventUserInfo.vue";
 import EventInfo from "../components/EventInfo.vue";
 import EventDetails from "../components/EventDetails.vue";
 import FutureVirtualExperience from "../components/FutureVirtualExperience.vue";
 import GeneralLayout from "../components/GeneralLayout.vue";
 import Finish from "../components/Finish.vue";
-import Test from "../components/Test.vue";
 
 export default {
   components: {
-    User,
+    EventUserInfo,
     EventInfo,
     EventDetails,
     FutureVirtualExperience,
     GeneralLayout,
     Finish,
-    Test
   },
 
   data() {
@@ -73,7 +73,6 @@ export default {
         "Event details",
         "Future virtual experience",
         "General layout of virtual event",
-        "Test"
       ],
       imageSrc: "",
       current: 0,
@@ -110,12 +109,11 @@ export default {
   methods: {
     userSubmit(formState) {
       this.current++;
-      this.event.user_firstname = formState.name;
-      this.event.user_lastname = formState.last_name;
+      this.event.user_firstname = formState.firstName;
+      this.event.user_lastname = formState.lastName;
       this.event.company_name = formState.company;
       this.event.user_email = formState.email;
-      this.event.user_phone_number =
-        formState.country_code + formState.phone_num;
+      this.event.user_phone_number = formState.countryCode + formState.phoneNumber;
       console.log(this.event);
     },
     eventInfoPrevious(formState) {
@@ -126,11 +124,12 @@ export default {
     eventInfoSubmit(formState) {
       this.current++;
       this.event.event_name = formState.eventName;
-      this.event.days_of_event = formState.noOfDays;
-      this.event.start_date = formState.startDate.format("YYYY-MM-DD");
-      this.event.end_date = formState.endDate.format("YYYY-MM-DD");
-      this.event.starting_time = formState.timeOfEvent.format("HH:MM:SS");
       this.event.is_first_event = formState.firstEvent;
+      this.event.days_of_event = formState.noOfDays;
+      // this.event.start_date = formState.startDate.format("YYYY-MM-DD");
+      // this.event.end_date = formState.endDate.format("YYYY-MM-DD");
+      // this.event.starting_time = formState.timeOfEvent.format("HH:MM:SS");
+
       // TODO: Vratiti kada bude proradio insert image-a
       // this.event.event_logo = formState.eventImage;
       console.log(formState);
@@ -142,9 +141,9 @@ export default {
     },
     eventDetailsSubmit(formState) {
       this.current++;
+      this.event.attendeesNo = formState.noOfAttendees;
       this.event.exhibitionersNo = formState.noOfExhibitioners;
       this.event.event_hosting = formState.officialWebsite;
-      this.event.attendeesNo = formState.noOfAttendees;
 
       //TODO: expoFeature je ostao neupisan nigde
 

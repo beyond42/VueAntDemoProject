@@ -1,18 +1,18 @@
 <template>
   <a-form
-    name="event-info-form"
     ref="formRef"
     :model="formState"
     :rules="rules"
-    v-bind="layout"
-    @finish="handleFinish"
-    @finishFailed="handleFinishFailed">
+    v-bind="layout">
+
     <a-form-item
       ref="eventName"
       label="Event name"
       name="eventName"
       has-feedback>
-      <a-input v-model:value="formState.eventName" placeholder="Name" />
+      <a-input
+        v-model:value="formState.eventName"
+        placeholder="Name" />
     </a-form-item>
 
     <a-form-item
@@ -20,13 +20,16 @@
       label="First Event"
       name="firstEvent"
       has-feedback>
-      <a-radio-group v-model:value="formState.firstEvent">
-        <a-radio value="Yes">Yes</a-radio>
-        <a-radio value="No">No</a-radio>
-      </a-radio-group>
+      <a-radio-group
+        v-model:value="formState.firstEvent"
+        :options="options" />
     </a-form-item>
 
-    <a-form-item ref="eventLogo" label="Event logo" name="eventLogo" has-feedback>
+    <a-form-item
+      ref="eventLogo"
+      label="Event logo"
+      name="eventLogo"
+      has-feedback>
       <a-upload-dragger
         v-model:fileList="fileList"
         name="file"
@@ -55,10 +58,10 @@
       <a-input-number
         v-model:value="formState.noOfDays"
         :min="1"
-        placeholder="No of days"/>
+        placeholder="No of days" />
     </a-form-item>
 
-    <a-form-item label="Start and end date" class="erodin-mb-0">
+    <a-form-item label="Start and end date" class="ant-form-item-required erodin-mb-0">
       <div class="datumi-inline">
         <a-form-item
           ref="startDate"
@@ -68,7 +71,7 @@
             v-model:value="formState.startDate"
             format="DD-MM-YYYY"
             placeholder="Start"
-            style="width: 180px"/>
+            style="width: 180px" />
         </a-form-item>
         <a-form-item
           ref="endDate"
@@ -84,6 +87,7 @@
     </a-form-item>
 
     <a-form-item
+      class="timeofevent"
       ref="timeOfEvent"
       label="Starting time of event"
       name="timeOfEvent"
@@ -99,10 +103,10 @@
       <a-col class="gutter-row" :span="8">
         <a-form-item>
           <a-button-group>
-            <a-button type="primary" @click="previousStep">
+            <a-button type="primary" @click.prevent="previousStep">
               <left-outlined /> Previous
             </a-button>
-            <a-button type="primary" @click="nextStep">
+            <a-button type="primary" @click.prevent="nextStep">
               Next <right-outlined />
             </a-button>
           </a-button-group>
@@ -116,6 +120,7 @@
         <a-button type="dashed" @click="resetForm">Reset</a-button>
       </a-button-group>
     </a-form-item>
+
   </a-form>
 </template>
 
@@ -126,7 +131,7 @@ import {
   RightOutlined,
 } from "@ant-design/icons-vue";
 import { defineComponent, reactive, ref, toRaw } from "vue";
-import checkNumberInput from "@/utils/checkNumberInput";
+import { checkNumberInput } from "@/utils/validators";
 
 export default defineComponent({
   components: {
@@ -148,12 +153,32 @@ export default defineComponent({
       timeOfEvent: undefined,
     });
 
+    const layout = {
+      labelCol: {
+        span: 8,
+      },
+      wrapperCol: {
+        span: 12,
+      },
+    };
+
+    const options = [
+      {
+        label: "Yes",
+        value: "Yes"
+      },
+      {
+        label: "No",
+        value: "No"
+      }
+    ];
+
     const rules = {
       eventName: [
         {
           required: true,
           message: "Please provide us with your event name",
-          trigger: "blur",
+          trigger: "change",
         },
         {
           min: 3,
@@ -200,27 +225,16 @@ export default defineComponent({
           type: 'object',
         },
       ],
-
-    };
-
-    const layout = {
-      labelCol: {
-        span: 8,
-      },
-      wrapperCol: {
-        span: 12,
-      },
+      timeOfEvent: [
+        {
+          message: 'The time of the event',
+          trigger: 'change',
+          type: 'object',
+        }
+      ]
     };
 
     // New handlers
-    const handleFinish = values => {
-      console.log(values, formState);
-    };
-
-    const handleFinishFailed = errors => {
-      console.log(errors);
-    };
-
     const resetForm = () => {
       formRef.value.resetFields();
     };
@@ -254,21 +268,21 @@ export default defineComponent({
     };
 
     const handleStartOpenChange = (date, dateString) => {
-      this.formState.startDate = dateString;
+      formState.startDate = dateString;
       console.log(date, dateString);
     };
 
     const handleEndOpenChange = (date, dateString) => {
-      this.formState.endDate = dateString;
+      formState.endDate = dateString;
       console.log(date, dateString);
     };
 
     const nextStep = () => {
-      emit("event-info-submit", this.formState);
+      emit("event-info-submit", formState);
     };
 
     const previousStep = () => {
-      emit("event-info-previous", this.formState);
+      emit("event-info-previous", formState);
     };
 
     return {
@@ -277,12 +291,11 @@ export default defineComponent({
       rules,
       layout,
       fileList: ref([]),
+      options,
       // TODO prebaciti handlere u utils koji mogu nekad kasnije
       // New
-      handleFinishFailed,
-      handleFinish,
-      onSubmit,
       resetForm,
+      onSubmit,
       // Old
       handleChange,
       handleStartOpenChange,
@@ -298,6 +311,7 @@ export default defineComponent({
 .ant-input-number {
   min-width: 180px;
 }
+.timeofevent .ant-form-item-control-input,
 .noofdays .ant-form-item-control-input {
   max-width: 215px;
 }

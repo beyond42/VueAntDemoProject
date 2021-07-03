@@ -2,23 +2,24 @@
   <a-form
     ref="formRef"
     :model="formState"
-    :label-col="labelCol"
-    :wrapper-col="wrapperCol">
+    :rules="rules"
+    v-bind="layout">
+
     <a-form-item
       ref="domainForEvent"
       label="Domain for the event"
       name="domainForEvent"
-      required>
+      has-feedback>
       <a-radio-group
         v-model:value="formState.domainForEvent"
-        :options="domainForEvent"/>
+        :options="domainForEventOptions"/>
     </a-form-item>
 
     <a-form-item
       ref="domainSubdomainName"
       label="Domain / subdomain name"
       name="domainSubdomainName"
-      required
+      has-feedback
       help="Please enter your own domain or subdomain for event">
       <a-input
         v-model:value="formState.domainSubdomainName"
@@ -32,60 +33,148 @@
       required>
       <a-radio-group
         v-model:value="formState.typeOfEvent"
-        :options="typeOfEvent"/>
+        :options="typeOfEventOptions" />
     </a-form-item>
 
     <a-row :gutter="[0, 16]" justify="center">
-      <a-col class="gutter-row" :span="labelCol.span">
+      <a-col class="gutter-row" :span="8">
         <a-form-item>
           <a-button-group>
-            <a-button type="primary" @click="previousStep">
-              <LeftOutlined /> Previous
+            <a-button type="primary" @click.prevent="previousStep">
+              <left-outlined /> Previous
             </a-button>
-            <a-button type="primary" @click="nextStep">
-              Next <RightOutlined />
+            <a-button type="primary" @click.prevent="nextStep">
+              Next <right-outlined />
             </a-button>
           </a-button-group>
         </a-form-item>
       </a-col>
     </a-row>
+
+    <a-form-item :wrapper-col="{ span: 12, offset: 8 }">
+      <a-button-group>
+        <a-button type="dashed" @click="onSubmit">Test</a-button>
+        <a-button type="dashed" @click="resetForm">Reset</a-button>
+      </a-button-group>
+    </a-form-item>
+
   </a-form>
 </template>
 
 <script>
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
-import { defineComponent, ref } from 'vue';
+import { defineComponent, reactive, ref, toRaw } from 'vue';
+import { checkTextInputGeneral } from "@/utils/validators";
+
 export default defineComponent({
   components: {
     LeftOutlined,
     RightOutlined,
   },
-  data() {
-    return {
+
+  setup(props, { emit }) {
+    const formRef = ref();
+
+    const formState = reactive({
+      domainForEvent: "",
+      domainSubdomainName: "",
+      typeOfEvent: "",
+    });
+
+    const layout = {
       labelCol: {
         span: 8,
       },
       wrapperCol: {
         span: 12,
-      },
-      formState: {
-        domainForEvent: ref(1).value,
-        domainSubdomainName: '',
-        typeOfEvent: ref(1).value,
-      },
-      domainForEvent: ['Yes', 'No'],
-      typeOfEvent: ['Opened', 'Closed'],
+      }
     };
-  },
-  methods: {
-    nextStep() {
-      this.$emit('future-expirience-submit', this.formState);
-    },
-    previousStep() {
-      this.$emit('future-expirience-previous', this.formState);
-    },
-  },
+
+    const domainForEventOptions = [
+      {
+        label: "Yes",
+        value: "Yes"
+      },
+      {
+        label: "No",
+        value: "No"
+      }
+    ]
+
+    const typeOfEventOptions = [
+      {
+        label: "Opened",
+        value: "Opened"
+      },
+      {
+        label: "Closed",
+        value: "Closed"
+      }
+    ];
+
+    const rules = {
+      domainForEvent: [
+        {
+          required: true,
+          message: "Please chose \"Yes\" or \"No\"",
+          trigger: "change",
+        },
+      ],
+      domainSubdomainName: [
+        {
+          required: true,
+          validator: checkTextInputGeneral,
+          trigger: 'change',
+        },
+      ],
+      typeOfEvent: [
+        {
+          required: true,
+          message: "Please chose \"Opened\" or \"Closed\"",
+          trigger: "change",
+        },
+      ],
+    };
+
+    // New handlers
+    const resetForm = () => {
+      formRef.value.resetFields();
+    };
+
+    const onSubmit = () => {
+      formRef.value
+        .validate()
+        .then(() => {
+          console.log('onSubmit values', formState, toRaw(formState));
+        })
+        .catch(error => {
+          console.log('onSubmit error', error);
+        });
+    };
+
+    // From old methods
+    const nextStep = () => {
+      emit('future-expirience-submit', formState)
+    };
+
+    const previousStep = () => {
+      emit('future-expirience-previous', formState)
+    };
+
+    return {
+      formState,
+      formRef,
+      rules,
+      layout,
+      domainForEventOptions,
+      typeOfEventOptions,
+      // New
+      resetForm,
+      onSubmit,
+      // Old
+      nextStep,
+      previousStep
+    };
+  }
 });
 </script>
-
-<style></style>
