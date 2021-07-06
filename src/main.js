@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
+import store from "./store.js";
 import "./main.css";
 
 // AntDesign import only what we use
@@ -85,5 +86,6 @@ app.config.globalProperties.$alert = alert;
 app.config.globalProperties.$message = message;
 app.config.globalProperties.$notification = notification;
 
+app.use(store);
 // Mount App
 app.mount("#app");

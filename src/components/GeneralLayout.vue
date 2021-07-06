@@ -1,8 +1,6 @@
 <template>
   <a-form
     ref="formRef"
-    :model="formState"
-    :rules="rules"
     v-bind="layout">
 
     <a-form-item
@@ -12,7 +10,7 @@
       has-feedback
       help="Please enter how many booths you will have">
       <a-input-number
-        v-model:value="formState.noOfBooths"
+        v-model:value="noOfBooths"
         :min="1"
         placeholder="No of booths"/>
     </a-form-item>
@@ -23,7 +21,7 @@
       name="areasOfEvent"
       has-feedback>
       <a-checkbox-group
-        v-model:value="formState.areasOfEvent"
+        v-model:value="areasOfEvent"
         :options="areasOfEventOptions"/>
     </a-form-item>
 
@@ -33,7 +31,7 @@
       name="eventHaveMultipleBooths"
       has-feedback>
       <a-radio-group
-        v-model:value="formState.eventHaveMultipleBooths"
+        v-model:value="eventHaveMultipleBooths"
         :options="eventHaveMultipleBoothsOptions"/>
     </a-form-item>
 
@@ -43,7 +41,7 @@
       name="liveRecorded"
       has-feedback>
       <a-radio-group
-        v-model:value="formState.liveRecorded"
+        v-model:value="liveRecorded"
         :options="liveRecordedOptions"/>
     </a-form-item>
 
@@ -53,7 +51,7 @@
       name="parallelSessions"
       has-feedback>
       <a-radio-group
-        v-model:value="formState.parallelSessions"
+        v-model:value="parallelSessions"
         :options="parallelSessionsOptions"/>
     </a-form-item>
 
@@ -63,7 +61,7 @@
       name="preferredTool"
       has-feedback>
       <a-radio-group
-        v-model:value="formState.preferredTool"
+        v-model:value="preferredTool"
         :options="preferredToolOptions"/>
     </a-form-item>
 
@@ -118,7 +116,8 @@
 <script>
 import { InboxOutlined, LeftOutlined, SaveOutlined } from '@ant-design/icons-vue';
 import { checkNumberInputGeneral } from "@/utils/validators";
-import { defineComponent, reactive, ref, toRaw } from 'vue';
+import { defineComponent, ref } from 'vue';
+import store from "../store";
 
 export default defineComponent({
   components: {
@@ -127,18 +126,59 @@ export default defineComponent({
     SaveOutlined,
   },
 
+  computed: {
+    noOfBooths: {
+      get() {
+        return store.state.event.boothsNo;
+      },
+      set(value) {
+        store.commit('setBoothsNo', value);
+      }
+    },
+    areasOfEvent: {
+      get() {
+        return store.state.event.event_areas;
+      },
+      set(value) {
+        store.commit('setEventAreas', value);
+      }
+    },
+    eventHaveMultipleBooths: {
+      get() {
+        return store.state.event.multiple_types_of_booths;
+      },
+      set(value) {
+        store.commit('setMultipleBooths', value);
+      }
+    },
+    liveRecorded: {
+      get() {
+        return store.state.event.live_or_recorded_content;
+      },
+      set(value) {
+        store.commit('setLiveOrRecorded', value);
+      }
+    },
+    parallelSessions: {
+      get() {
+        return store.state.event.live_parallel_sessions;
+      },
+      set(value) {
+        store.commit('setParallelSessions', value);
+      }
+    },
+    preferredTool: {
+      get() {
+        return store.state.event.streamingEventsTool;
+      },
+      set(value) {
+        store.commit('setStreamingEventsTool', value);
+      }
+    },
+  },
+
   setup(props, { emit }) {
     const formRef = ref();
-
-    const formState = reactive({
-      noOfBooths: undefined,
-      areasOfEvent: [],
-      eventHaveMultipleBooths: "",
-      liveRecorded: "",
-      parallelSessions: "",
-      preferredTool: "",
-      eventAgenda: "",
-    });
 
     const layout = {
       labelCol: {
@@ -293,24 +333,25 @@ export default defineComponent({
 
     // From old methods
     const onSubmit = () => {
-      formRef.value
-        .validate()
-        .then(() => {
-          emit('general-layout-submit', formState);
-          console.log('onSubmit values', formState, toRaw(formState));
-        })
-        .catch(error => {
-          console.log('onSubmit error', error);
-        });
+      emit('general-layout-submit');
+      console.log(store.state)
+      // formRef.value
+      //   .validate()
+      //   .then(() => {
+      //     emit('general-layout-submit', formState);
+      //     console.log('onSubmit values', formState, toRaw(formState));
+      //   })
+      //   .catch(error => {
+      //     console.log('onSubmit error', error);
+      //   });
     };
 
     const previousStep = () => {
-      emit("general-layout-previous", formState);
+      emit("general-layout-previous");
     };
 
     return {
       formRef,
-      formState,
       layout,
       areasOfEventOptions,
       eventHaveMultipleBoothsOptions,
