@@ -165,10 +165,10 @@ export default defineComponent({
     };
 
     return {
-      formState,
       formRef,
-      rules,
+      formState,
       layout,
+      rules,
       // New
       resetForm,
       onSubmit,

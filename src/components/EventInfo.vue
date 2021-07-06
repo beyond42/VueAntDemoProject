@@ -286,12 +286,12 @@ export default defineComponent({
     };
 
     return {
-      formState,
       formRef,
-      rules,
+      formState,
       layout,
-      fileList: ref([]),
       options,
+      rules,
+      fileList: ref([]),
       // TODO prebaciti handlere u utils koji mogu nekad kasnije
       // New
       resetForm,

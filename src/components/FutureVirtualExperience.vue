@@ -30,7 +30,7 @@
       ref="typeOfEvent"
       label="Type of event"
       name="typeOfEvent"
-      required>
+      has-feedback>
       <a-radio-group
         v-model:value="formState.typeOfEvent"
         :options="typeOfEventOptions" />
@@ -162,12 +162,12 @@ export default defineComponent({
     };
 
     return {
-      formState,
       formRef,
-      rules,
+      formState,
       layout,
       domainForEventOptions,
       typeOfEventOptions,
+      rules,
       // New
       resetForm,
       onSubmit,

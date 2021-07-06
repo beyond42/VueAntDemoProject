@@ -175,6 +175,10 @@ export default defineComponent({
 
     return {
       formRef,
+      formState,
+      rules,
+      onSubmit,
+      resetForm,
       labelCol: {
         span: 8,
       },
@@ -182,10 +186,6 @@ export default defineComponent({
         span: 12,
       },
       other: "",
-      formState,
-      rules,
-      onSubmit,
-      resetForm,
     };
   },
 });

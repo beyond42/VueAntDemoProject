@@ -2,13 +2,14 @@
   <a-form
     ref="formRef"
     :model="formState"
-    :label-col="labelCol"
-    :wrapper-col="wrapperCol">
+    :rules="rules"
+    v-bind="layout">
+
     <a-form-item
       ref="noOfBooths"
       label="Number of booths"
       name="noOfBooths"
-      required
+      has-feedback
       help="Please enter how many booths you will have">
       <a-input-number
         v-model:value="formState.noOfBooths"
@@ -20,57 +21,57 @@
       ref="areasOfEvent"
       label="Areas of event should feature"
       name="areasOfEvent"
-      required>
+      has-feedback>
       <a-checkbox-group
         v-model:value="formState.areasOfEvent"
-        :options="areasOfEvent"/>
+        :options="areasOfEventOptions"/>
     </a-form-item>
 
     <a-form-item
       ref="eventHaveMultipleBooths"
       label="Will your event have multiple booths"
       name="eventHaveMultipleBooths"
-      required>
+      has-feedback>
       <a-radio-group
         v-model:value="formState.eventHaveMultipleBooths"
-        :options="eventHaveMultipleBooths"/>
+        :options="eventHaveMultipleBoothsOptions"/>
     </a-form-item>
 
     <a-form-item
       ref="liveRecorded"
       label="Live stream or recorded"
       name="liveRecorded"
-      required>
+      has-feedback>
       <a-radio-group
         v-model:value="formState.liveRecorded"
-        :options="liveRecorded"/>
+        :options="liveRecordedOptions"/>
     </a-form-item>
 
     <a-form-item
       ref="parallelSessions"
       label="Parrallel sessions"
       name="parallelSessions"
-      required>
+      has-feedback>
       <a-radio-group
         v-model:value="formState.parallelSessions"
-        :options="parallelSessions"/>
+        :options="parallelSessionsOptions"/>
     </a-form-item>
 
     <a-form-item
       ref="preferredTool"
       label="Preferred tool for live-streaming:"
       name="preferredTool"
-      required>
+      has-feedback>
       <a-radio-group
         v-model:value="formState.preferredTool"
-        :options="preferredTool"/>
+        :options="preferredToolOptions"/>
     </a-form-item>
 
     <a-form-item
       ref="eventAgenda"
       label="Event Agenda"
       name="eventAgenda"
-      required>
+      has-feedback>
       <a-upload-dragger
         v-model:fileList="fileList"
         name="file"
@@ -91,74 +92,251 @@
     </a-form-item>
 
     <a-row :gutter="[0, 16]" justify="center">
-      <a-col class="gutter-row" :span="labelCol.span">
+      <a-col class="gutter-row" :span="8">
         <a-form-item>
           <a-button-group>
             <a-button type="primary" @click="previousStep">
-              <LeftOutlined /> Previous
+              <left-outlined /> Previous
             </a-button>
-            <a-button type="primary" @click.prevent="onSubmit">
-              Submit <SaveOutlined />
+            <a-button type="primary" @click="onSubmitOld">
+              Submit <save-outlined />
             </a-button>
           </a-button-group>
         </a-form-item>
       </a-col>
     </a-row>
+
+    <a-form-item :wrapper-col="{ span: 12, offset: 8 }">
+      <a-button-group>
+        <a-button type="dashed" @click="onSubmit">Test</a-button>
+        <a-button type="dashed" @click="resetForm">Reset</a-button>
+      </a-button-group>
+    </a-form-item>
+
   </a-form>
 </template>
 
 <script>
 import { InboxOutlined, LeftOutlined, SaveOutlined } from '@ant-design/icons-vue';
-import { defineComponent, ref } from 'vue';
+import { checkNumberInputGeneral } from "@/utils/validators";
+import { defineComponent, reactive, ref, toRaw } from 'vue';
+
 export default defineComponent({
   components: {
     InboxOutlined,
     LeftOutlined,
     SaveOutlined,
   },
-  data() {
-    return {
+
+  setup(props, { emit }) {
+    const formRef = ref();
+
+    const formState = reactive({
+      noOfBooths: undefined,
+      areasOfEvent: [],
+      eventHaveMultipleBooths: "",
+      liveRecorded: "",
+      parallelSessions: "",
+      preferredTool: "",
+      eventAgenda: "",
+    });
+
+    const layout = {
       labelCol: {
         span: 8,
       },
       wrapperCol: {
         span: 12,
       },
-      formState: {
-        noOfBooths: '',
-        areasOfEvent: [],
-        eventHaveMultipleBooths: ref(1).value,
-        liveRecorded: ref(1).value,
-        parallelSessions: ref(1).value,
-        preferredTool: ref(1).value,
-      },
-      areasOfEvent: [
-        'External venue design',
-        'Lobby/Info desk',
-        'Conference rooms',
-        'Expo halls with booths',
-        'Other',
-      ],
-      eventHaveMultipleBooths: ['Yes', 'No'],
-      liveRecorded: ['Live', 'Recorded', 'Both'],
-      parallelSessions: ['Yes', 'No'],
-      preferredTool: ['No', 'Zoom', 'YouTube', 'Microsoft Teams', 'Other'],
     };
-  },
-  emits: ['general-layout-submit'],
-  methods: {
-    onSubmit() {
-      this.$emit('general-layout-submit', this.formState);
-    },
-    previousStep() {
-      this.$emit('general-layout-previous', this.formState);
-    },
+
+    const areasOfEventOptions = [
+      {
+        label: "External venue design",
+        value: "External venue design"
+      },
+      {
+        label: "Lobby/Info desk",
+        value: "Lobby/Info desk"
+      },
+      {
+        label: "Conference rooms",
+        value: "Conference rooms"
+      },
+      {
+        label: "Expo halls with booths",
+        value: "Expo halls with booths"
+      },
+      {
+        label: "Other",
+        value: "Other"
+      },
+    ];
+
+    const eventHaveMultipleBoothsOptions = [
+      {
+        label: "Yes",
+        value: "Yes"
+      },
+      {
+        label: "No",
+        value: "No"
+      }
+    ];
+
+    const liveRecordedOptions = [
+      {
+        label: "Live",
+        value: "Live"
+      },
+      {
+        label: "Recorded",
+        value: "Recorded"
+      },
+      {
+        label: "Both",
+        value: "Both"
+      }
+    ];
+
+    const parallelSessionsOptions = [
+      {
+        label: "Yes",
+        value: "Yes"
+      },
+      {
+        label: "No",
+        value: "No"
+      }
+    ];
+
+    const preferredToolOptions = [
+      {
+        label: "No",
+        value: "No"
+      },
+      {
+        label: "Zoom",
+        value: "Zoom"
+      },
+      {
+        label: "YouTube",
+        value: "YouTube"
+      },
+      {
+        label: "Microsoft Teams",
+        value: "Microsoft Teams"
+      },
+      {
+        label: "Other",
+        value: "Other"
+      },
+    ];
+
+    const rules = {
+      noOfBooths: [
+        {
+          required: true,
+          validator: checkNumberInputGeneral,
+          message: "Please provide us with number of ",
+          trigger: 'change',
+          type: "object",
+        }
+      ],
+      areasOfEvent: [
+        {
+          required: true,
+          message: 'Please select at least one activity type',
+          trigger: 'change',
+          type: 'array',
+        }
+      ],
+      eventHaveMultipleBooths: [
+        {
+          required: true,
+          message: 'Please select one',
+          trigger: 'change',
+        },
+      ],
+      liveRecorded: [
+        {
+          required: true,
+          message: 'Please select one',
+          trigger: 'change',
+        },
+      ],
+      parallelSessions: [
+        {
+          required: true,
+          message: 'Please select parrallel session',
+          trigger: 'change',
+        },
+      ],
+      preferredTool: [
+        {
+          required: true,
+          message: 'Please select prefered tool',
+          trigger: 'change',
+        },
+      ],
+      eventAgenda: [
+        {
+          required: true,
+          message: 'Please upload the agenda',
+        },
+      ],
+    }
+
+    // New handlers
+    const resetForm = () => {
+      formRef.value.resetFields();
+    };
+
+    // Kombinacija submit validacije i emit nista nisam testirao
+    const onSubmit = () => {
+      formRef.value
+        .validate()
+        .then(() => {
+          console.log('onSubmit values', formState, toRaw(formState));
+        })
+        .catch(error => {
+          console.log('onSubmit error', error);
+        });
+    };
+
+    // From old methods
+    const onSubmitOld = () => {
+      emit('general-layout-submit', formState);
+    };
+
+    const previousStep = () => {
+      emit("general-layout-previous", formState);
+    };
+
+    return {
+      formRef,
+      formState,
+      layout,
+      areasOfEventOptions,
+      eventHaveMultipleBoothsOptions,
+      liveRecordedOptions,
+      parallelSessionsOptions,
+      preferredToolOptions,
+      rules,
+      fileList: ref([]),
+      // New
+      resetForm,
+      onSubmit,
+      // Old
+      onSubmitOld,
+      previousStep,
+    };
   },
 });
 </script>
 
 <style scoped>
 .ant-input-number {
-  min-width: 150px;
+  min-width: 180px;
 }
 </style>
