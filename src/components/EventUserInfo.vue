@@ -73,7 +73,7 @@
       <a-col class="gutter-row" :span="8">
         <a-form-item>
           <a-button-group>
-            <a-button type="primary" @click="nextStep">
+            <a-button type="primary" @click.prevent="nextStep">
               Next <right-outlined />
             </a-button>
           </a-button-group>
@@ -83,7 +83,6 @@
 
     <a-form-item :wrapper-col="{ span: 12, offset: 8 }">
       <a-button-group>
-        <a-button type="dashed" @click="onSubmit">Test</a-button>
         <a-button type="dashed" @click="resetForm">Reset</a-button>
       </a-button-group>
     </a-form-item>
@@ -148,20 +147,17 @@ export default defineComponent({
       formRef.value.resetFields();
     };
 
-    const onSubmit = () => {
+    // From old methods
+    const nextStep = () => {
       formRef.value
         .validate()
         .then(() => {
+          emit("user-submit", formState);
           console.log('onSubmit values', formState, toRaw(formState));
         })
         .catch(error => {
           console.log('onSubmit error', error);
         });
-    };
-
-    // From old methods
-    const nextStep = () => {
-      emit("user-submit", formState);
     };
 
     return {
@@ -171,7 +167,6 @@ export default defineComponent({
       rules,
       // New
       resetForm,
-      onSubmit,
       // Old
       nextStep,
       // results: [], // TODO unkoment

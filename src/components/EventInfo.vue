@@ -116,7 +116,6 @@
 
     <a-form-item :wrapper-col="{ span: 12, offset: 8 }">
       <a-button-group>
-        <a-button type="dashed" @click="onSubmit">Test</a-button>
         <a-button type="dashed" @click="resetForm">Reset</a-button>
       </a-button-group>
     </a-form-item>
@@ -197,7 +196,7 @@ export default defineComponent({
       // TODO Vidjeti za file upload rule ovo nije testirano jel ispravno
       eventLogo: [
         {
-          required: true,
+          required: false,
           message: 'Please upload the logo',
         },
       ],
@@ -239,17 +238,6 @@ export default defineComponent({
       formRef.value.resetFields();
     };
 
-    const onSubmit = () => {
-      formRef.value
-        .validate()
-        .then(() => {
-          console.log('onSubmit values', formState, toRaw(formState));
-        })
-        .catch(error => {
-          console.log('onSubmit error', error);
-        });
-    };
-
     // From old methods
     const handleChange = info => {
       const status = info.file.status;
@@ -278,7 +266,15 @@ export default defineComponent({
     };
 
     const nextStep = () => {
-      emit("event-info-submit", formState);
+      formRef.value
+        .validate()
+        .then(() => {
+          emit("event-info-submit", formState);
+          console.log('onSubmit values', formState, toRaw(formState));
+        })
+        .catch(error => {
+          console.log('onSubmit error', error);
+        });
     };
 
     const previousStep = () => {
@@ -295,7 +291,6 @@ export default defineComponent({
       // TODO prebaciti handlere u utils koji mogu nekad kasnije
       // New
       resetForm,
-      onSubmit,
       // Old
       handleChange,
       handleStartOpenChange,

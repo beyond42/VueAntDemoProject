@@ -114,7 +114,7 @@ export default {
       this.event.company_name = formState.company;
       this.event.user_email = formState.email;
       this.event.user_phone_number = formState.countryCode + formState.phoneNumber;
-      console.log(this.event);
+      console.log('EventUserInfo', this.event);
     },
     eventInfoPrevious(formState) {
       this.current--;

@@ -95,10 +95,10 @@
       <a-col class="gutter-row" :span="8">
         <a-form-item>
           <a-button-group>
-            <a-button type="primary" @click="previousStep">
+            <a-button type="primary" @click.prevent="previousStep">
               <left-outlined /> Previous
             </a-button>
-            <a-button type="primary" @click="onSubmitOld">
+            <a-button type="primary" @click.prevent="onSubmit">
               Submit <save-outlined />
             </a-button>
           </a-button-group>
@@ -108,7 +108,6 @@
 
     <a-form-item :wrapper-col="{ span: 12, offset: 8 }">
       <a-button-group>
-        <a-button type="dashed" @click="onSubmit">Test</a-button>
         <a-button type="dashed" @click="resetForm">Reset</a-button>
       </a-button-group>
     </a-form-item>
@@ -281,7 +280,7 @@ export default defineComponent({
       ],
       eventAgenda: [
         {
-          required: true,
+          required: false,
           message: 'Please upload the agenda',
         },
       ],
@@ -292,21 +291,17 @@ export default defineComponent({
       formRef.value.resetFields();
     };
 
-    // Kombinacija submit validacije i emit nista nisam testirao
+    // From old methods
     const onSubmit = () => {
       formRef.value
         .validate()
         .then(() => {
+          emit('general-layout-submit', formState);
           console.log('onSubmit values', formState, toRaw(formState));
         })
         .catch(error => {
           console.log('onSubmit error', error);
         });
-    };
-
-    // From old methods
-    const onSubmitOld = () => {
-      emit('general-layout-submit', formState);
     };
 
     const previousStep = () => {
@@ -326,9 +321,8 @@ export default defineComponent({
       fileList: ref([]),
       // New
       resetForm,
-      onSubmit,
       // Old
-      onSubmitOld,
+      onSubmit,
       previousStep,
     };
   },

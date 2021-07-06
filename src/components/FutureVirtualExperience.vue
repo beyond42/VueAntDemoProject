@@ -53,7 +53,6 @@
 
     <a-form-item :wrapper-col="{ span: 12, offset: 8 }">
       <a-button-group>
-        <a-button type="dashed" @click="onSubmit">Test</a-button>
         <a-button type="dashed" @click="resetForm">Reset</a-button>
       </a-button-group>
     </a-form-item>
@@ -141,20 +140,17 @@ export default defineComponent({
       formRef.value.resetFields();
     };
 
-    const onSubmit = () => {
+    // From old methods
+    const nextStep = () => {
       formRef.value
         .validate()
         .then(() => {
+          emit('future-expirience-submit', formState)
           console.log('onSubmit values', formState, toRaw(formState));
         })
         .catch(error => {
           console.log('onSubmit error', error);
         });
-    };
-
-    // From old methods
-    const nextStep = () => {
-      emit('future-expirience-submit', formState)
     };
 
     const previousStep = () => {
@@ -170,7 +166,6 @@ export default defineComponent({
       rules,
       // New
       resetForm,
-      onSubmit,
       // Old
       nextStep,
       previousStep

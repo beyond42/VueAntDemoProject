@@ -53,10 +53,10 @@
       <a-col class="gutter-row" :span="8">
         <a-form-item>
           <a-button-group>
-            <a-button type="primary" @click="previousStep">
+            <a-button type="primary" @click.prevent="previousStep">
               <left-outlined /> Previous
             </a-button>
-            <a-button type="primary" @click="nextStep">
+            <a-button type="primary" @click.prevent="nextStep">
               Next <right-outlined />
             </a-button>
           </a-button-group>
@@ -66,7 +66,6 @@
 
     <a-form-item :wrapper-col="{ span: 12, offset: 8 }">
       <a-button-group>
-        <a-button type="dashed" @click="onSubmit">Test</a-button>
         <a-button type="dashed" @click="resetForm">Reset</a-button>
       </a-button-group>
     </a-form-item>
@@ -155,10 +154,12 @@ export default defineComponent({
       formRef.value.resetFields();
     };
 
-    const onSubmit = () => {
+    // From old methods
+    const nextStep = () => {
       formRef.value
         .validate()
         .then(() => {
+          emit('event-details-submit', formState);
           console.log('onSubmit values', formState, toRaw(formState));
         })
         .catch(error => {
@@ -166,10 +167,6 @@ export default defineComponent({
         });
     };
 
-    // From old methods
-    const nextStep = () => {
-      emit('event-details-submit', formState);
-    };
     const previousStep = () =>{
       emit('event-details-previous', formState);
     };
@@ -182,7 +179,6 @@ export default defineComponent({
       rules,
       // New
       resetForm,
-      onSubmit,
       // Old
       nextStep,
       previousStep,
