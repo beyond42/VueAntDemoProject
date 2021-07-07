@@ -1,8 +1,6 @@
 <template>
   <a-form
     ref="formRef"
-    :model="formState"
-    :rules="rules"
     v-bind="layout">
 
     <a-form-item
@@ -12,7 +10,7 @@
       has-feedback
       help="Please provide us with number of attendees you expect">
       <a-input-number
-        v-model:value="formState.noOfAttendees"
+        v-model:value="noOfAttendees"
         :min="1"
         placeholder="No of attendees" />
     </a-form-item>
@@ -23,7 +21,7 @@
       name="expoFeature"
       has-feedback>
       <a-radio-group
-        v-model:value="formState.expoFeature"
+        v-model:value="expoFeature"
         :options="options" />
     </a-form-item>
 
@@ -34,7 +32,7 @@
       has-feedback
       help="Please provide us with number of exhibitioners you expect">
       <a-input-number
-        v-model:value="formState.noOfExhibitioners"
+        v-model:value="noOfExhibitioners"
         :min="1"
         placeholder="No of exhibitioners" />
     </a-form-item>
@@ -45,7 +43,7 @@
       name="officialWebsite"
       has-feedback>
       <a-radio-group
-        v-model:value="formState.officialWebsite"
+        v-model:value="officialWebsite"
         :options="options" />
     </a-form-item>
 
@@ -76,7 +74,8 @@
 <script>
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
 import { checkNumberInputGeneral } from "@/utils/validators";
-import { defineComponent, reactive, ref, toRaw } from 'vue';
+import { defineComponent, ref } from 'vue';
+import store from "../store";
 
 export default defineComponent({
   components: {
@@ -84,15 +83,50 @@ export default defineComponent({
     RightOutlined,
   },
 
+  computed: {
+    noOfAttendees: {
+      get() {
+        return store.state.event.attendeesNo;
+      },
+      set(value) {
+        store.commit('setAttendeesNo', value);
+      }
+    },
+    expoFeature: {
+      get() {
+        return store.state.event.expo_feature;
+      },
+      set(value) {
+        store.commit('setExpoFeature', value);
+      }
+    },
+    noOfExhibitioners: {
+      get() {
+        return store.state.event.exhibitionersNo;
+      },
+      set(value) {
+        store.commit('setExhibitionersNo', value);
+      }
+    },
+    officialWebsite: {
+      get() {
+        return store.state.event.event_hosting;
+      },
+      set(value) {
+        store.commit('setOfficialWebsite', value);
+      }
+    },
+  },
+
   setup(props, { emit }) {
     const formRef = ref();
 
-    const formState = reactive({
-      noOfAttendees: undefined,
-      expoFeature: "",
-      noOfExhibitioners: undefined,
-      officialWebsite: "",
-    });
+    // const formState = reactive({
+    //   noOfAttendees: undefined,
+    //   expoFeature: "",
+    //   noOfExhibitioners: undefined,
+    //   officialWebsite: "",
+    // });
 
     const layout = {
       labelCol: {
@@ -156,24 +190,25 @@ export default defineComponent({
 
     // From old methods
     const nextStep = () => {
-      formRef.value
-        .validate()
-        .then(() => {
-          emit('event-details-submit', formState);
-          console.log('onSubmit values', formState, toRaw(formState));
-        })
-        .catch(error => {
-          console.log('onSubmit error', error);
-        });
+      emit('event-details-submit');
+      console.log(store.state);
+      // formRef.value
+      //   .validate()
+      //   .then(() => {
+      //     emit('event-details-submit');
+      //     console.log('onSubmit values', formState, toRaw(formState));
+      //   })
+      //   .catch(error => {
+      //     console.log('onSubmit error', error);
+      //   });
     };
 
     const previousStep = () =>{
-      emit('event-details-previous', formState);
+      emit('event-details-previous');
     };
 
     return {
       formRef,
-      formState,
       layout,
       options,
       rules,

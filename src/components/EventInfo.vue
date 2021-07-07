@@ -1,8 +1,6 @@
 <template>
   <a-form
     ref="formRef"
-    :model="formState"
-    :rules="rules"
     v-bind="layout">
 
     <a-form-item
@@ -11,7 +9,7 @@
       name="eventName"
       has-feedback>
       <a-input
-        v-model:value="formState.eventName"
+        v-model:value="eventName"
         placeholder="Name" />
     </a-form-item>
 
@@ -21,7 +19,7 @@
       name="firstEvent"
       has-feedback>
       <a-radio-group
-        v-model:value="formState.firstEvent"
+        v-model:value="firstEvent"
         :options="options" />
     </a-form-item>
 
@@ -56,7 +54,7 @@
       name="noOfDays"
       has-feedback>
       <a-input-number
-        v-model:value="formState.noOfDays"
+        v-model:value="noOfDays"
         :min="1"
         placeholder="No of days" />
     </a-form-item>
@@ -68,7 +66,7 @@
           name="startDate"
           has-feedback>
           <a-date-picker
-            v-model:value="formState.startDate"
+            v-model:value="startDate"
             format="DD-MM-YYYY"
             placeholder="Start"
             style="width: 180px" />
@@ -78,7 +76,7 @@
           name="endDate"
           has-feedback>
           <a-date-picker
-            v-model:value="formState.endDate"
+            v-model:value="endDate"
             format="DD-MM-YYYY"
             placeholder="End"
             style="width: 180px" />
@@ -93,7 +91,7 @@
       name="timeOfEvent"
       has-feedback>
       <a-time-picker
-        v-model:value="formState.timeOfEvent"
+        v-model:value="timeOfEvent"
         :minute-step="15"
         :second-step="10"
         style="width: 180px" />
@@ -129,8 +127,9 @@ import {
   LeftOutlined,
   RightOutlined,
 } from "@ant-design/icons-vue";
-import { defineComponent, reactive, ref, toRaw } from "vue";
+import { defineComponent, ref } from "vue";
 import { checkNumberInput } from "@/utils/validators";
+import store from "../store";
 
 export default defineComponent({
   components: {
@@ -139,18 +138,69 @@ export default defineComponent({
     RightOutlined,
   },
 
+  computed: {
+    eventName: {
+      get() {
+        return store.state.event.event_name;
+      },
+      set(value) {
+        store.commit('setEventName', value);
+      }
+    },
+    firstEvent: {
+      get() {
+        return store.state.event.is_first_event;
+      },
+      set(value) {
+        store.commit('setIsFirstEvent', value);
+      }
+    },
+    noOfDays: {
+      get() {
+        return store.state.event.days_of_event;
+      },
+      set(value) {
+        store.commit('setNoOfDays', value);
+      }
+    },
+    startDate: {
+      get() {
+        return store.state.event.start_date;
+      },
+      set(value) {
+        store.commit('setStartDate', value);
+      }
+    },
+    endDate: {
+      get() {
+        return store.state.event.end_date;
+      },
+      set(value) {
+        store.commit('setEndDate', value);
+      }
+    },
+    timeOfEvent: {
+      get() {
+        return store.state.event.starting_time;
+      },
+      set(value) {
+        store.commit('setStartingTime', value);
+      }
+    },
+  },
+
   setup(props, { emit }) {
     const formRef = ref();
 
-    const formState = reactive({
-      eventName: "",
-      firstEvent: "",
-      eventLogo: "",
-      noOfDays: undefined,
-      startDate: undefined,
-      endDate: undefined,
-      timeOfEvent: undefined,
-    });
+    // const formState = reactive({
+    //   eventName: "",
+    //   firstEvent: "",
+    //   eventLogo: "",
+    //   noOfDays: undefined,
+    //   startDate: undefined,
+    //   endDate: undefined,
+    //   timeOfEvent: undefined,
+    // });
 
     const layout = {
       labelCol: {
@@ -256,34 +306,35 @@ export default defineComponent({
     };
 
     const handleStartOpenChange = (date, dateString) => {
-      formState.startDate = dateString;
+      this.startDate = dateString;
       console.log(date, dateString);
     };
 
     const handleEndOpenChange = (date, dateString) => {
-      formState.endDate = dateString;
+      this.endDate = dateString;
       console.log(date, dateString);
     };
 
     const nextStep = () => {
-      formRef.value
-        .validate()
-        .then(() => {
-          emit("event-info-submit", formState);
-          console.log('onSubmit values', formState, toRaw(formState));
-        })
-        .catch(error => {
-          console.log('onSubmit error', error);
-        });
+      emit("event-info-submit");
+      console.log(store.state)
+      // formRef.value
+      //   .validate()
+      //   .then(() => {
+      //     emit("event-info-submit");
+      //     console.log('onSubmit values', formState, toRaw(formState));
+      //   })
+      //   .catch(error => {
+      //     console.log('onSubmit error', error);
+      //   });
     };
 
     const previousStep = () => {
-      emit("event-info-previous", formState);
+      emit("event-info-previous");
     };
 
     return {
       formRef,
-      formState,
       layout,
       options,
       rules,

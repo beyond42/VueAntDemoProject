@@ -53,6 +53,7 @@ import EventDetails from "../components/EventDetails.vue";
 import FutureVirtualExperience from "../components/FutureVirtualExperience.vue";
 import GeneralLayout from "../components/GeneralLayout.vue";
 import Finish from "../components/Finish.vue";
+import store from "../store";
 
 export default {
   components: {
@@ -107,84 +108,37 @@ export default {
     };
   },
   methods: {
-    userSubmit(formState) {
+    userSubmit() {
       this.current++;
-      this.event.user_firstname = formState.firstName;
-      this.event.user_lastname = formState.lastName;
-      this.event.company_name = formState.company;
-      this.event.user_email = formState.email;
-      this.event.user_phone_number = formState.countryCode + formState.phoneNumber;
-      console.log('EventUserInfo', this.event);
     },
-    eventInfoPrevious(formState) {
+    eventInfoPrevious() {
       this.current--;
-      console.log("previous");
-      console.log(formState);
     },
-    eventInfoSubmit(formState) {
+    eventInfoSubmit() {
       this.current++;
-      this.event.event_name = formState.eventName;
-      this.event.is_first_event = formState.firstEvent;
-      this.event.days_of_event = formState.noOfDays;
-      // this.event.start_date = formState.startDate.format("YYYY-MM-DD");
-      // this.event.end_date = formState.endDate.format("YYYY-MM-DD");
-      // this.event.starting_time = formState.timeOfEvent.format("HH:MM:SS");
-
       // TODO: Vratiti kada bude proradio insert image-a
       // this.event.event_logo = formState.eventImage;
-      console.log(formState);
-      console.log(this.event);
     },
-    eventDetailsPrevious(formState) {
+    eventDetailsPrevious() {
       this.current--;
-      console.log(formState);
     },
-    eventDetailsSubmit(formState) {
+    eventDetailsSubmit() {
       this.current++;
-      this.event.attendeesNo = formState.noOfAttendees;
-      this.event.exhibitionersNo = formState.noOfExhibitioners;
-      this.event.event_hosting = formState.officialWebsite;
-
-      //TODO: expoFeature je ostao neupisan nigde
-
-      console.log(formState);
-      console.log(this.event);
     },
-    futureExpiriencePrevious(formState) {
+    futureExpiriencePrevious() {
       this.current--;
-      console.log("previous");
-      console.log(formState);
     },
-    futureExpirienceSubmit(formState) {
+    futureExpirienceSubmit() {
       this.current++;
-      this.event.event_domain = formState.domainSubdomainName;
-      this.event.is_event_opened = formState.typeOfEvent;
-      this.event.event_hosting = formState.domainForEvent;
-
-      console.log(formState);
-      console.log(this.event);
     },
-    generalLayoutSubmit(formState) {
+    generalLayoutSubmit() {
       this.current++;
-      this.event.boothsNo = formState.noOfBooths;
-      for (const area in formState.areasOfEvent) {
-        this.event.event_areas += formState.areasOfEvent[area];
-        this.event.event_areas += ", ";
-      }
-      this.event.multiple_types_of_booths = formState.eventHaveMultipleBooths;
-      this.event.live_or_recorded_content = formState.liveRecorded;
-      this.event.live_parallel_sessions = formState.parallelSessions;
-      this.event.streamingEventsTool = formState.preferredTool;
-      console.log(formState);
-      console.log(this.event);
-      this.submitEventData(this.event);
+      this.submitEventData();
     },
-    generalLayoutPrevious(formState) {
+    generalLayoutPrevious() {
       this.current--;
-      console.log("previous");
-      console.log(formState);
     },
-    submitEventData(ev) {
+    submitEventData() {
       // * MARK: ovaj event prolazi
       // const ev = {
       //   attendeesNo: 99,
@@ -213,6 +167,18 @@ export default {
       //   user_lastname: 'Petrovic',
       //   user_phone_number: '+38177777777777',
       // };
+
+      var ev = store.state.event;
+      ev.start_date = ev.start_date.format("YYYY-MM-DD");
+      ev.end_date = ev.end_date.format("YYYY-MM-DD");
+      ev.starting_time = ev.starting_time.format("HH:MM:SS");
+      var areas = "";
+      for (const area in ev.event_areas) {
+        areas += ev.event_areas[area];
+        areas += ", ";
+      }
+      ev.event_areas = areas;
+      ev.user_phone_number = ev.countryCode + ev.phoneNumber;
 
       console.log(JSON.stringify(ev));
       const headers = {

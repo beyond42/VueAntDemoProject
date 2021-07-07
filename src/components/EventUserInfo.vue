@@ -1,8 +1,6 @@
 <template>
   <a-form
     ref="formRef"
-    :model="formState"
-    :rules="rules"
     v-bind="layout">
 
     <a-form-item
@@ -12,7 +10,7 @@
       has-feedback
       help="Please provide us with your name">
       <a-input
-        v-model:value="formState.firstName"
+        v-model:value="firstName"
         placeholder="Name" />
     </a-form-item>
 
@@ -23,7 +21,7 @@
       has-feedback
       help="Please provide us with your surname">
       <a-input
-        v-model:value="formState.lastName"
+        v-model:value="lastName"
         placeholder="Surname" />
     </a-form-item>
 
@@ -34,7 +32,7 @@
       has-feedback
       help="Company or organisation you represent">
       <a-input
-        v-model:value="formState.company"
+        v-model:value="company"
         placeholder="Company / Organization"/>
     </a-form-item>
 
@@ -46,7 +44,7 @@
       help="Please provide us your email address for contact">
       <a-input
         type="email"
-        v-model:value="formState.email"
+        v-model:value="email"
         placeholder="Bussines email address"/>
     </a-form-item>
 
@@ -58,13 +56,13 @@
       <a-input-group class="phone-group" compact>
         <a-select
           style="width: 25%"
-          v-model:value="formState.countryCode">
+          v-model:value="countryCode">
           <a-select-option value="+381">+381</a-select-option>
           <a-select-option value="+387">+387</a-select-option>
         </a-select>
         <a-input
           style="width: 75%"
-          v-model:value="formState.phoneNumber"
+          v-model:value="phoneNumber"
           placeholder="555 555-1234"/>
       </a-input-group>
     </a-form-item>
@@ -94,25 +92,68 @@
 // TODO komentirao axios endpoint nije OK pa pravi console error kad se popravi vratiti
 // import axios from 'axios';
 import { RightOutlined } from "@ant-design/icons-vue";
-import { defineComponent, reactive, ref, toRaw } from "vue";
+import { defineComponent, ref } from "vue";
 import { checkTextInputGeneral } from "@/utils/validators";
+import store from "../store";
 
 export default defineComponent({
   components: {
     RightOutlined
   },
 
+  computed: {
+    firstName: {
+      get() {
+        return store.state.event.user_firstname;
+      },
+      set(value) {
+        store.commit('setFirstName', value);
+      }
+    },
+    lastName: {
+      get() {
+        return store.state.event.user_lastname;
+      },
+      set(value) {
+        store.commit('setLastName', value);
+      }
+    },
+    company: {
+      get() {
+        return store.state.event.company_name;
+      },
+      set(value) {
+        store.commit('setCompanyName', value);
+      }
+    },
+    email: {
+      get() {
+        return store.state.event.user_email;
+      },
+      set(value) {
+        store.commit('setUserEmail', value);
+      }
+    },
+    phoneNumber: {
+      get() {
+        return store.state.event.user_phone_number;
+      },
+      set(value) {
+        store.commit('setUserPhoneNumber', value);
+      }
+    },
+    countryCode: {
+      get() {
+        return store.state.event.countryCode;
+      },
+      set(value) {
+        store.commit('setCountryCode', value);
+      }
+    },
+  },
+
   setup(props, { emit }) {
     const formRef = ref();
-
-    const formState = reactive({
-      firstName: "",
-      lastName: "",
-      company: "",
-      email: "",
-      countryCode: "+381",
-      phoneNumber: "",
-    });
 
     const layout = {
       labelCol: {
@@ -149,22 +190,25 @@ export default defineComponent({
 
     // From old methods
     const nextStep = () => {
-      formRef.value
-        .validate()
-        .then(() => {
-          emit("user-submit", formState);
-          console.log('onSubmit values', formState, toRaw(formState));
-        })
-        .catch(error => {
-          console.log('onSubmit error', error);
-        });
+      emit("user-submit");
+      console.log(store.state);
+      // formRef.value
+      //   .validate()
+      //   .then(() => {
+      //     emit("user-submit", formState);
+      //     console.log('onSubmit values', formState, toRaw(formState));
+      //   })
+      //   .catch(error => {
+      //     console.log('onSubmit error', error);
+      //   });
     };
 
     return {
       formRef,
-      formState,
+      // formState,
       layout,
       rules,
+      
       // New
       resetForm,
       // Old
@@ -172,20 +216,6 @@ export default defineComponent({
       // results: [], // TODO unkoment
     };
   }
-
-  // TODO komentirao axios endpoint nije OK pa pravi console error kad se popravi vratiti
-  // async created() {
-  //   try {
-  //     const res = await axios.get(
-  //       `https://beyond2.doc.ba/api/getEvents?user_id=` + '1'
-  //     );
-  //     console.log(res);
-  //     this.results = res.data;
-  //     console.log(this.results);
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // },
 });
 </script>
 
