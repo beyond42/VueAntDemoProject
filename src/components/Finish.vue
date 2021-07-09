@@ -1,17 +1,18 @@
 <template>
-  <a-row :gutter="[0, 16]" justify="center">
-    <a-image :src="require('../assets/collectiVibeLogo.png')" :width="307" />
-  </a-row>
-  <a-row :gutter="[0, 16]" justify="center">
-    <h1>
-      <br />
-      {{ message }}
-    </h1>
-  </a-row>
+  <a-result
+    v-if="statusMessage"
+    status="success"
+    title="Thank you for submitting your information!"
+    sub-title=" We will be in touch with you shortly.">
+  </a-result>
+
+  <a-result v-else status="warning" title="Error! Please, try again.">
+  </a-result>
+
 </template>
 
 <script>
 export default {
-  props: ['message'],
+  props: ['statusMessage'],
 };
 </script>

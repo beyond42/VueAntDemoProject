@@ -58,7 +58,7 @@
             @general-layout-submit="generalLayoutSubmit"
             @general-layout-previous="generalLayoutPrevious">
           </general-layout>
-          <finish v-if="current === 5" :message="submitMessage"></finish>
+          <finish v-if="current === 5" :statusMessage="submitStatus"></finish>
         </a-col>
 
         <a-col class="gutter-row" :span="6">
@@ -116,16 +116,16 @@ export default defineComponent({
         is_first_event: "", // varchar
         event_logo: "", // blob
         days_of_event: 0, // int
-        start_date: "", // date
-        end_date: "", // date
-        starting_time: "",  // time
+        start_date: undefined, // date
+        end_date: undefined, // date
+        starting_time: undefined,  // time
         // ? Event details
         attendeesNo: 0, // int
         expo_feature: "", // varchar
         exhibitionersNo: 0, // varchar
         event_hosting: "", // varchar
         // ? Future virtual experience
-        domainForEvent: "", // varchar
+        domain_for_event: "", // varchar
         event_domain: "", // varchar
         is_event_opened: "", // varchar
         // ? General layout of virtual event
@@ -136,7 +136,8 @@ export default defineComponent({
         live_parallel_sessions: "", // varchar
         streamingEventsTool: "", // varchar
       },
-      submitMessage: ""
+      submitMessage: "",
+      submitStatus: ""
     };
   },
   methods: {
@@ -193,7 +194,7 @@ export default defineComponent({
     },
     futureExpirienceNext(formState) {
       this.current++;
-      this.event.domainForEvent = formState.domainForEvent;
+      this.event.domain_for_event = formState.domainForEvent;
       this.event.event_domain = formState.domainSubdomainName;
       this.event.is_event_opened = formState.typeOfEvent;
       console.log('FutureExpirience', toRaw(this.event));
@@ -204,29 +205,20 @@ export default defineComponent({
       this.current--;
       console.log('GeneralLayout-PrevClick', toRaw(this.event));
     },
-    // ! NAPOMENA:
-    // ! ovdje jos provjeriti za ovaj loop trebalo bi da se ovo drugacije hendla
-    // ! ne mozemo razbijati array jer se na Prev Next ocekuje array u props
     generalLayoutSubmit(formState) {
+      this.current++;
       this.event.boothsNo = formState.noOfBooths;
-      this.event.event_areas = formState.areasOfEvent
-      // for (const area in formState.areasOfEvent) {
-      //   this.event.event_areas += formState.areasOfEvent[area];
-      //   this.event.event_areas += ", ";
-      // }
+      this.event.event_areas = formState.areasOfEvent;
       this.event.multiple_types_of_booths = formState.eventHaveMultipleBooths;
       this.event.live_or_recorded_content = formState.liveRecorded;
       this.event.live_parallel_sessions = formState.parallelSessions;
       this.event.streamingEventsTool = formState.preferredTool;
       console.log('GeneralLayout', toRaw(this.event));
 
-      // ! NAPOMENA: privremeno iskljucio dok se ne napravi priprema podataka za MARS
-      // ! Formatiranje datuma i vremena kao i vadjenje iz array podataka AreasOfEvent
-      //this.submitEventData(this.event);
-      this.pripremaFormSubmit(this.event);
+      this.submitEventData(this.event);
+      // this.pripremaFormSubmit(this.event);
     },
 
-    // Logiku poslije testa prebaciti u submitEventData
     pripremaFormSubmit(data){
       let formatiranje = JSON.stringify(data)
       console.log(
@@ -237,9 +229,12 @@ export default defineComponent({
     },
 
     submitEventData(ev) {
-      // TODO prebaciti logiku za rjesavanje formatiranja ovdje
+      ev.event_areas = ev.event_areas.toString();
+      ev.start_date = ev.start_date.format("YYYY-MM-DD");
+      ev.end_date = ev.end_date.format("YYYY-MM-DD");
+      ev.starting_time = ev.starting_time.format("HH:mm");
       let dataForSubmit = JSON.stringify(ev);
-      console.log(dataForSubmit);
+      console.log('%c 🍠 dataForSubmit: ', 'font-size:20px;background-color: #F5CE50;color:#fff;', dataForSubmit);
       const headers = {
         "Content-Type": "application/json"
       };
@@ -250,15 +245,14 @@ export default defineComponent({
         })
         .then((response) => {
           console.log(response);
-          this.submitMessage =
-            "Thank you for submitting your information! We will be in touch with you shortly.";
+          this.submitStatus = true;
           setTimeout(() => {
             this.$message.success("Event is successfully submitted!");
           }, 1000);
         })
         .catch((err) => {
           console.log(err.response.data);
-          this.submitMessage = "Error! Please, try again.";
+          this.submitStatus = false;
           setTimeout(() => {
             this.$message.error("Error! Please, try again.");
           }, 1000);

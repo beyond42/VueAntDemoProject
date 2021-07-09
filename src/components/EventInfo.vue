@@ -135,9 +135,9 @@ export default defineComponent({
     firstEvent: String,
     eventLogo: String,
     noOfDays: Number,
-    startDate: String,
-    endDate: String,
-    timeOfEvent: String,
+    startDate: Object,
+    endDate: Object,
+    timeOfEvent: Object,
   },
 
   setup(props, { emit }) {

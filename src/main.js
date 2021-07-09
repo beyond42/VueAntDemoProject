@@ -27,6 +27,7 @@ import {
   Switch,
   TimePicker,
   Upload,
+  Result,
 } from "ant-design-vue";
 
 // Components import
@@ -80,6 +81,7 @@ app.use(Steps);
 app.use(Switch);
 app.use(Upload);
 app.use(TimePicker);
+app.use(Result);
 
 app.config.globalProperties.$message = message;
 app.config.globalProperties.$notification = notification;
