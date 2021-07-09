@@ -1,6 +1,8 @@
 <template>
   <a-form
     ref="formRef"
+    :model="formState"
+    :rules="rules"
     v-bind="layout">
 
     <a-form-item
@@ -10,7 +12,7 @@
       has-feedback
       help="Please enter how many booths you will have">
       <a-input-number
-        v-model:value="noOfBooths"
+        v-model:value="formState.noOfBooths"
         :min="1"
         placeholder="No of booths"/>
     </a-form-item>
@@ -21,8 +23,9 @@
       name="areasOfEvent"
       has-feedback>
       <a-checkbox-group
-        v-model:value="areasOfEvent"
-        :options="areasOfEventOptions"/>
+        name="checkboxgroupAreasOfEvent"
+        v-model:value="formState.areasOfEvent"
+        :options="areasOfEventOptions" />
     </a-form-item>
 
     <a-form-item
@@ -31,7 +34,7 @@
       name="eventHaveMultipleBooths"
       has-feedback>
       <a-radio-group
-        v-model:value="eventHaveMultipleBooths"
+        v-model:value="formState.eventHaveMultipleBooths"
         :options="eventHaveMultipleBoothsOptions"/>
     </a-form-item>
 
@@ -41,7 +44,7 @@
       name="liveRecorded"
       has-feedback>
       <a-radio-group
-        v-model:value="liveRecorded"
+        v-model:value="formState.liveRecorded"
         :options="liveRecordedOptions"/>
     </a-form-item>
 
@@ -51,7 +54,7 @@
       name="parallelSessions"
       has-feedback>
       <a-radio-group
-        v-model:value="parallelSessions"
+        v-model:value="formState.parallelSessions"
         :options="parallelSessionsOptions"/>
     </a-form-item>
 
@@ -61,32 +64,8 @@
       name="preferredTool"
       has-feedback>
       <a-radio-group
-        v-model:value="preferredTool"
+        v-model:value="formState.preferredTool"
         :options="preferredToolOptions"/>
-    </a-form-item>
-
-    <a-form-item
-      ref="eventAgenda"
-      label="Event Agenda"
-      name="eventAgenda"
-      has-feedback>
-      <a-upload-dragger
-        v-model:fileList="fileList"
-        name="file"
-        :multiple="true"
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-        @change="handleChange">
-        <p class="ant-upload-drag-icon">
-          <inbox-outlined />
-        </p>
-        <p class="ant-upload-text">
-          Click or drag file to this area to upload
-        </p>
-        <p class="ant-upload-hint">
-          Support for a single or bulk upload. Strictly prohibit from uploading
-          company data or other band files
-        </p>
-      </a-upload-dragger>
     </a-form-item>
 
     <a-row :gutter="[0, 16]" justify="center">
@@ -104,81 +83,40 @@
       </a-col>
     </a-row>
 
-    <a-form-item :wrapper-col="{ span: 12, offset: 8 }">
-      <a-button-group>
-        <a-button type="dashed" @click="resetForm">Reset</a-button>
-      </a-button-group>
-    </a-form-item>
-
   </a-form>
 </template>
 
 <script>
-import { InboxOutlined, LeftOutlined, SaveOutlined } from '@ant-design/icons-vue';
+import { LeftOutlined, SaveOutlined } from '@ant-design/icons-vue';
 import { checkNumberInputGeneral } from "@/utils/validators";
-import { defineComponent, ref } from 'vue';
-import store from "../store";
+import { defineComponent, reactive, ref, toRaw } from 'vue';
 
 export default defineComponent({
+  name: "GeneralLayout",
   components: {
-    InboxOutlined,
     LeftOutlined,
     SaveOutlined,
   },
-
-  computed: {
-    noOfBooths: {
-      get() {
-        return store.state.event.boothsNo;
-      },
-      set(value) {
-        store.commit('setBoothsNo', value);
-      }
-    },
-    areasOfEvent: {
-      get() {
-        return store.state.event.event_areas;
-      },
-      set(value) {
-        store.commit('setEventAreas', value);
-      }
-    },
-    eventHaveMultipleBooths: {
-      get() {
-        return store.state.event.multiple_types_of_booths;
-      },
-      set(value) {
-        store.commit('setMultipleBooths', value);
-      }
-    },
-    liveRecorded: {
-      get() {
-        return store.state.event.live_or_recorded_content;
-      },
-      set(value) {
-        store.commit('setLiveOrRecorded', value);
-      }
-    },
-    parallelSessions: {
-      get() {
-        return store.state.event.live_parallel_sessions;
-      },
-      set(value) {
-        store.commit('setParallelSessions', value);
-      }
-    },
-    preferredTool: {
-      get() {
-        return store.state.event.streamingEventsTool;
-      },
-      set(value) {
-        store.commit('setStreamingEventsTool', value);
-      }
-    },
+  props: {
+    noOfBooths: Number,
+    areasOfEvent: Array,
+    eventHaveMultipleBooths: String,
+    liveRecorded: String,
+    parallelSessions: String,
+    preferredTool: String,
   },
 
   setup(props, { emit }) {
     const formRef = ref();
+
+    const formState = reactive({
+      noOfBooths: props.noOfBooths || undefined,
+      areasOfEvent: props.areasOfEvent,
+      eventHaveMultipleBooths: props.eventHaveMultipleBooths || undefined,
+      liveRecorded: props.liveRecorded,
+      parallelSessions: props.parallelSessions || undefined,
+      preferredTool: props.preferredTool,
+    });
 
     const layout = {
       labelCol: {
@@ -287,7 +225,7 @@ export default defineComponent({
           required: true,
           message: 'Please select at least one activity type',
           trigger: 'change',
-          type: 'array',
+          type: "array",
         }
       ],
       eventHaveMultipleBooths: [
@@ -318,32 +256,18 @@ export default defineComponent({
           trigger: 'change',
         },
       ],
-      eventAgenda: [
-        {
-          required: false,
-          message: 'Please upload the agenda',
-        },
-      ],
     }
 
-    // New handlers
-    const resetForm = () => {
-      formRef.value.resetFields();
-    };
-
-    // From old methods
     const onSubmit = () => {
-      emit('general-layout-submit');
-      console.log(store.state)
-      // formRef.value
-      //   .validate()
-      //   .then(() => {
-      //     emit('general-layout-submit', formState);
-      //     console.log('onSubmit values', formState, toRaw(formState));
-      //   })
-      //   .catch(error => {
-      //     console.log('onSubmit error', error);
-      //   });
+      formRef.value
+        .validate()
+        .then(() => {
+          emit('general-layout-submit', formState);
+          console.log('general-layout-submit values', toRaw(formState));
+        })
+        .catch(error => {
+          console.log('general-layout-submit error', error);
+        });
     };
 
     const previousStep = () => {
@@ -352,6 +276,7 @@ export default defineComponent({
 
     return {
       formRef,
+      formState,
       layout,
       areasOfEventOptions,
       eventHaveMultipleBoothsOptions,
@@ -359,10 +284,6 @@ export default defineComponent({
       parallelSessionsOptions,
       preferredToolOptions,
       rules,
-      fileList: ref([]),
-      // New
-      resetForm,
-      // Old
       onSubmit,
       previousStep,
     };

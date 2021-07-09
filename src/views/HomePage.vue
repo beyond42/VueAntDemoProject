@@ -10,25 +10,51 @@
         <a-col class="gutter-row" :span="12">
           <event-user-info
             v-if="current === 0"
-            @user-submit="userSubmit">
+            :firstName="event.user_firstname"
+            :lastName="event.user_lastname"
+            :company="event.company_name"
+            :email="event.user_email"
+            :countryCode="event.countryCode"
+            :phoneNumber="event.user_phone_number"
+            @event-user-info-next="eventUserInfoNext">
           </event-user-info>
           <event-info
             v-if="current === 1"
-            @event-info-submit="eventInfoSubmit"
+            :eventName="event.event_name"
+            :firstEvent="event.is_first_event"
+            :eventLogo="event.event_logo"
+            :noOfDays="event.days_of_event"
+            :startDate="event.start_date"
+            :endDate="event.end_date"
+            :timeOfEvent="event.starting_time"
+            @event-info-next="eventInfoNext"
             @event-info-previous="eventInfoPrevious">
           </event-info>
           <event-details
             v-if="current === 2"
-            @event-details-submit="eventDetailsSubmit"
+            :noOfAttendees="event.attendeesNo"
+            :expoFeature="event.expo_feature"
+            :noOfExhibitioners="event.exhibitionersNo"
+            :officialWebsite="event.event_hosting"
+            @event-details-next="eventDetailsNext"
             @event-details-previous="eventDetailsPrevious">
           </event-details>
           <future-virtual-experience
             v-if="current === 3"
-            @future-expirience-submit="futureExpirienceSubmit"
+            :domainForEvent="event.domainForEvent"
+            :domainSubdomainName="event.event_domain"
+            :typeOfEvent="event.is_event_opened"
+            @future-expirience-next="futureExpirienceNext"
             @future-expirience-previous="futureExpiriencePrevious">
           </future-virtual-experience>
           <general-layout
             v-if="current === 4"
+            :noOfBooths="event.boothsNo"
+            :areasOfEvent="event.event_areas"
+            :eventHaveMultipleBooths="event.multiple_types_of_booths"
+            :liveRecorded="event.live_or_recorded_content"
+            :parallelSessions="event.live_parallel_sessions"
+            :preferredTool="event.streamingEventsTool"
             @general-layout-submit="generalLayoutSubmit"
             @general-layout-previous="generalLayoutPrevious">
           </general-layout>
@@ -53,9 +79,10 @@ import EventDetails from "../components/EventDetails.vue";
 import FutureVirtualExperience from "../components/FutureVirtualExperience.vue";
 import GeneralLayout from "../components/GeneralLayout.vue";
 import Finish from "../components/Finish.vue";
-import store from "../store";
+import { defineComponent, toRaw } from 'vue';
 
-export default {
+export default defineComponent({
+  name: "HomePage",
   components: {
     EventUserInfo,
     EventInfo,
@@ -67,7 +94,6 @@ export default {
 
   data() {
     return {
-      results: [],
       titles: [
         "Personal information",
         "Event information",
@@ -78,115 +104,148 @@ export default {
       imageSrc: "",
       current: 0,
       event: {
-        event_name: "",
-        is_first_event: "",
-        event_logo: "",
-        days_of_event: 0,
-        start_date: "",
-        end_date: "",
-        starting_time: "",
-        user_firstname: "",
-        user_lastname: "",
-        company_name: "",
-        user_email: "",
-        user_phone_number: "",
-        attendeesNo: 0,
-        attendees_location: "",
-        exhibitionersNo: "",
-        official_event_website_url: "",
-        event_hosting: "",
-        event_domain: "",
-        is_event_opened: 0,
-        event_areas: "",
-        boothsNo: 0,
-        multiple_types_of_booths: 0,
-        live_or_recorded_content: "",
-        live_parallel_sessions: 0,
-        streamingEventsTool: ""
+        // ? Personal Information
+        user_firstname: "", // varchar
+        user_lastname: "", // varchar
+        company_name: "", // varchar
+        user_email: "", // varchar
+        countryCode: "", // varchar
+        user_phone_number: "", // varchar
+        // ? Event information
+        event_name: "", // varchar
+        is_first_event: "", // varchar
+        event_logo: "", // blob
+        days_of_event: 0, // int
+        start_date: "", // date
+        end_date: "", // date
+        starting_time: "",  // time
+        // ? Event details
+        attendeesNo: 0, // int
+        expo_feature: "", // varchar
+        exhibitionersNo: 0, // varchar
+        event_hosting: "", // varchar
+        // ? Future virtual experience
+        domainForEvent: "", // varchar
+        event_domain: "", // varchar
+        is_event_opened: "", // varchar
+        // ? General layout of virtual event
+        boothsNo: 0, // int
+        event_areas: [], // varchar
+        multiple_types_of_booths: "", // varchar
+        live_or_recorded_content: "", // varchar
+        live_parallel_sessions: "", // varchar
+        streamingEventsTool: "", // varchar
       },
       submitMessage: ""
     };
   },
   methods: {
-    userSubmit() {
+    // * Event User Information
+    eventUserInfoNext(formState) {
       this.current++;
+      this.event.user_firstname = formState.firstName;
+      this.event.user_lastname = formState.lastName;
+      this.event.company_name = formState.company;
+      this.event.user_email = formState.email;
+      this.event.user_phone_number = formState.phoneNumber;
+      this.event.countryCode = formState.countryCode;
+      console.log('EventUserInfo', toRaw(this.event));
     },
+
+    // * Event Information
     eventInfoPrevious() {
       this.current--;
+      console.log('EventInfo-PrevClick', toRaw(this.event));
     },
-    eventInfoSubmit() {
+    // ! NAPOMENA:
+    // ! format se mora uraditi na submitu podataka za datume i vrijeme
+    // ! jer antd datepicker i timepicker ocekuje moment object da bi nam radio Prev Next
+    eventInfoNext(formState) {
       this.current++;
-      // TODO: Vratiti kada bude proradio insert image-a
-      // this.event.event_logo = formState.eventImage;
+      this.event.event_name = formState.eventName;
+      this.event.is_first_event = formState.firstEvent;
+      // this.event.event_logo = formState.eventImage; // TODO: Vratiti kada bude proradio insert image-a
+      this.event.days_of_event = formState.noOfDays;
+      this.event.start_date = formState.startDate;
+      this.event.end_date = formState.endDate; // TODO: testiram jel ne radi zbog ovog - .format("YYYY-MM-DD")
+      this.event.starting_time = formState.timeOfEvent; // TODO: testiram jel ne radi zbog ovog - .format("HH:mm")
+      console.log('EventInfo', toRaw(this.event));
     },
+
+    // * Event Details
     eventDetailsPrevious() {
       this.current--;
+      console.log('EventDetails-PrevClick', toRaw(this.event));
     },
-    eventDetailsSubmit() {
+    eventDetailsNext(formState) {
       this.current++;
+      this.event.attendeesNo = formState.noOfAttendees;
+      this.event.expo_feature = formState.expoFeature;
+      this.event.exhibitionersNo = formState.noOfExhibitioners;
+      this.event.event_hosting = formState.officialWebsite;
+      console.log('EventDetails', toRaw(this.event));
     },
+
+    // * Future Virtual Expirience
     futureExpiriencePrevious() {
       this.current--;
+      console.log('FutureExpirience-PrevClick', toRaw(this.event));
     },
-    futureExpirienceSubmit() {
+    futureExpirienceNext(formState) {
       this.current++;
+      this.event.domainForEvent = formState.domainForEvent;
+      this.event.event_domain = formState.domainSubdomainName;
+      this.event.is_event_opened = formState.typeOfEvent;
+      console.log('FutureExpirience', toRaw(this.event));
     },
-    generalLayoutSubmit() {
-      this.current++;
-      this.submitEventData();
-    },
+
+    // * General Layout
     generalLayoutPrevious() {
       this.current--;
+      console.log('GeneralLayout-PrevClick', toRaw(this.event));
     },
-    submitEventData() {
-      // * MARK: ovaj event prolazi
-      // const ev = {
-      //   attendeesNo: 99,
-      //   attendees_location: '',
-      //   boothsNo: 77,
-      //   company_name: 'Beyond',
-      //   days_of_event: 88,
-      //   end_date: '2021-06-20',
-      //   event_areas: 'External venue design, Conference rooms, Other, ',
-      //   event_domain: 'www.ivanatest.com',
-      //   event_hosting: 'Yes',
-      //   event_logo: '',
-      //   event_name: 'my event vue app 1',
-      //   exhibitionersNo: '66',
-      //   is_event_opened: 'Closed',
-      //   is_first_event: 'Yes',
-      //   live_or_recorded_content: 'Live',
-      //   live_parallel_sessions: 'Yes',
-      //   multiple_types_of_booths: 'Yes',
-      //   official_event_website_url: '',
-      //   start_date: '2021-06-01',
-      //   starting_time: '22:06:00',
-      //   streamingEventsTool: 'zoom',
-      //   user_email: 'ilic.adam03@gmail.com',
-      //   user_firstname: 'Petar',
-      //   user_lastname: 'Petrovic',
-      //   user_phone_number: '+38177777777777',
-      // };
+    // ! NAPOMENA:
+    // ! ovdje jos provjeriti za ovaj loop trebalo bi da se ovo drugacije hendla
+    // ! ne mozemo razbijati array jer se na Prev Next ocekuje array u props
+    generalLayoutSubmit(formState) {
+      this.event.boothsNo = formState.noOfBooths;
+      this.event.event_areas = formState.areasOfEvent
+      // for (const area in formState.areasOfEvent) {
+      //   this.event.event_areas += formState.areasOfEvent[area];
+      //   this.event.event_areas += ", ";
+      // }
+      this.event.multiple_types_of_booths = formState.eventHaveMultipleBooths;
+      this.event.live_or_recorded_content = formState.liveRecorded;
+      this.event.live_parallel_sessions = formState.parallelSessions;
+      this.event.streamingEventsTool = formState.preferredTool;
+      console.log('GeneralLayout', toRaw(this.event));
 
-      var ev = store.state.event;
-      ev.start_date = ev.start_date.format("YYYY-MM-DD");
-      ev.end_date = ev.end_date.format("YYYY-MM-DD");
-      ev.starting_time = ev.starting_time.format("HH:MM:SS");
-      var areas = "";
-      for (const area in ev.event_areas) {
-        areas += ev.event_areas[area];
-        areas += ", ";
-      }
-      ev.event_areas = areas;
-      ev.user_phone_number = ev.countryCode + ev.phoneNumber;
+      // ! NAPOMENA: privremeno iskljucio dok se ne napravi priprema podataka za MARS
+      // ! Formatiranje datuma i vremena kao i vadjenje iz array podataka AreasOfEvent
+      //this.submitEventData(this.event);
+      this.pripremaFormSubmit(this.event);
+    },
 
-      console.log(JSON.stringify(ev));
+    // Logiku poslije testa prebaciti u submitEventData
+    pripremaFormSubmit(data){
+      let formatiranje = JSON.stringify(data)
+      console.log(
+        '%c 🦼 formatiranje: ',
+        'font-size:20px;background-color: #B03734;color:#fff;',
+        formatiranje
+      );
+    },
+
+    submitEventData(ev) {
+      // TODO prebaciti logiku za rjesavanje formatiranja ovdje
+      let dataForSubmit = JSON.stringify(ev);
+      console.log(dataForSubmit);
       const headers = {
         "Content-Type": "application/json"
       };
 
       axios
-        .post("https://beyond2.doc.ba/api/postEventData", JSON.stringify(ev), {
+        .post("https://beyond2.doc.ba/api/postEventData", dataForSubmit, {
           headers: headers
         })
         .then((response) => {
@@ -206,5 +265,5 @@ export default {
         });
     }
   }
-};
+});
 </script>

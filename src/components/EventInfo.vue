@@ -1,6 +1,8 @@
 <template>
   <a-form
     ref="formRef"
+    :model="formState"
+    :rules="rules"
     v-bind="layout">
 
     <a-form-item
@@ -9,7 +11,7 @@
       name="eventName"
       has-feedback>
       <a-input
-        v-model:value="eventName"
+        v-model:value="formState.eventName"
         placeholder="Name" />
     </a-form-item>
 
@@ -19,7 +21,7 @@
       name="firstEvent"
       has-feedback>
       <a-radio-group
-        v-model:value="firstEvent"
+        v-model:value="formState.firstEvent"
         :options="options" />
     </a-form-item>
 
@@ -54,7 +56,7 @@
       name="noOfDays"
       has-feedback>
       <a-input-number
-        v-model:value="noOfDays"
+        v-model:value="formState.noOfDays"
         :min="1"
         placeholder="No of days" />
     </a-form-item>
@@ -66,8 +68,8 @@
           name="startDate"
           has-feedback>
           <a-date-picker
-            v-model:value="startDate"
-            format="DD-MM-YYYY"
+            v-model:value="formState.startDate"
+            format="YYYY-MM-DD"
             placeholder="Start"
             style="width: 180px" />
         </a-form-item>
@@ -76,8 +78,8 @@
           name="endDate"
           has-feedback>
           <a-date-picker
-            v-model:value="endDate"
-            format="DD-MM-YYYY"
+            v-model:value="formState.endDate"
+            format="YYYY-MM-DD"
             placeholder="End"
             style="width: 180px" />
         </a-form-item>
@@ -91,9 +93,9 @@
       name="timeOfEvent"
       has-feedback>
       <a-time-picker
-        v-model:value="timeOfEvent"
-        :minute-step="15"
-        :second-step="10"
+        v-model:value="formState.timeOfEvent"
+        format="HH:mm"
+        :minute-step="5"
         style="width: 180px" />
     </a-form-item>
 
@@ -112,95 +114,44 @@
       </a-col>
     </a-row>
 
-    <a-form-item :wrapper-col="{ span: 12, offset: 8 }">
-      <a-button-group>
-        <a-button type="dashed" @click="resetForm">Reset</a-button>
-      </a-button-group>
-    </a-form-item>
-
   </a-form>
 </template>
 
 <script>
-import {
-  InboxOutlined,
-  LeftOutlined,
-  RightOutlined,
-} from "@ant-design/icons-vue";
-import { defineComponent, ref } from "vue";
+import { InboxOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
+import { defineComponent, reactive, ref, toRaw } from "vue";
+import { message } from "ant-design-vue"
 import { checkNumberInput } from "@/utils/validators";
-import store from "../store";
 
 export default defineComponent({
+  name: "EventInfo",
   components: {
     InboxOutlined,
     LeftOutlined,
     RightOutlined,
   },
-
-  computed: {
-    eventName: {
-      get() {
-        return store.state.event.event_name;
-      },
-      set(value) {
-        store.commit('setEventName', value);
-      }
-    },
-    firstEvent: {
-      get() {
-        return store.state.event.is_first_event;
-      },
-      set(value) {
-        store.commit('setIsFirstEvent', value);
-      }
-    },
-    noOfDays: {
-      get() {
-        return store.state.event.days_of_event;
-      },
-      set(value) {
-        store.commit('setNoOfDays', value);
-      }
-    },
-    startDate: {
-      get() {
-        return store.state.event.start_date;
-      },
-      set(value) {
-        store.commit('setStartDate', value);
-      }
-    },
-    endDate: {
-      get() {
-        return store.state.event.end_date;
-      },
-      set(value) {
-        store.commit('setEndDate', value);
-      }
-    },
-    timeOfEvent: {
-      get() {
-        return store.state.event.starting_time;
-      },
-      set(value) {
-        store.commit('setStartingTime', value);
-      }
-    },
+  props: {
+    eventName: String,
+    firstEvent: String,
+    eventLogo: String,
+    noOfDays: Number,
+    startDate: String,
+    endDate: String,
+    timeOfEvent: String,
   },
 
   setup(props, { emit }) {
     const formRef = ref();
 
-    // const formState = reactive({
-    //   eventName: "",
-    //   firstEvent: "",
-    //   eventLogo: "",
-    //   noOfDays: undefined,
-    //   startDate: undefined,
-    //   endDate: undefined,
-    //   timeOfEvent: undefined,
-    // });
+    const formState = reactive({
+      eventName: props.eventName,
+      firstEvent: props.firstEvent,
+      eventLogo: props.eventLogo,
+      noOfDays: props.noOfDays || undefined,
+      startDate: props.startDate || undefined,
+      endDate: props.endDate || undefined,
+      timeOfEvent: props.timeOfEvent || undefined,
+    });
 
     const layout = {
       labelCol: {
@@ -233,7 +184,7 @@ export default defineComponent({
           min: 3,
           max: 250,
           message: "Length should be 3 to 250",
-          trigger: "blur",
+          trigger: "change",
         },
       ],
       firstEvent: [
@@ -276,6 +227,7 @@ export default defineComponent({
       ],
       timeOfEvent: [
         {
+          required: false,
           message: 'The time of the event',
           trigger: 'change',
           type: 'object',
@@ -283,50 +235,42 @@ export default defineComponent({
       ]
     };
 
-    // New handlers
-    const resetForm = () => {
-      formRef.value.resetFields();
-    };
-
-    // From old methods
+    // * Logo upload
     const handleChange = info => {
       const status = info.file.status;
-      console.log("info");
-      console.log(info);
+
       if (status !== "uploading") {
         console.log(info.file, info.fileList);
       }
 
       if (status === "done") {
-        this.$message.success(`${info.file.name} file uploaded successfully.`);
-        this.formState.eventImage = info.file;
+        message.success(`${info.file.name} file uploaded successfully.`);
+        formState.eventImage = info.file;
       } else if (status === "error") {
-        this.$message.error(`${info.file.name} file upload failed.`);
+        message.error(`${info.file.name} file upload failed.`);
       }
     };
 
-    const handleStartOpenChange = (date, dateString) => {
-      this.startDate = dateString;
-      console.log(date, dateString);
-    };
+    // const handleStartOpenChange = (date, dateString) => {
+    //   formState.startDate = dateString;
+    //   console.log('startDate', date, dateString);
+    // };
 
-    const handleEndOpenChange = (date, dateString) => {
-      this.endDate = dateString;
-      console.log(date, dateString);
-    };
+    // const handleEndOpenChange = (date, dateString) => {
+    //   formState.endDate = dateString;
+    //   console.log('endDate', date, dateString);
+    // };
 
     const nextStep = () => {
-      emit("event-info-submit");
-      console.log(store.state)
-      // formRef.value
-      //   .validate()
-      //   .then(() => {
-      //     emit("event-info-submit");
-      //     console.log('onSubmit values', formState, toRaw(formState));
-      //   })
-      //   .catch(error => {
-      //     console.log('onSubmit error', error);
-      //   });
+      formRef.value
+        .validate()
+        .then(() => {
+          emit("event-info-next", formState);
+          console.log('event-info-next values', toRaw(formState));
+        })
+        .catch(error => {
+          console.log('event-info-next error', error);
+        });
     };
 
     const previousStep = () => {
@@ -335,17 +279,14 @@ export default defineComponent({
 
     return {
       formRef,
+      formState,
       layout,
       options,
       rules,
       fileList: ref([]),
-      // TODO prebaciti handlere u utils koji mogu nekad kasnije
-      // New
-      resetForm,
-      // Old
       handleChange,
-      handleStartOpenChange,
-      handleEndOpenChange,
+      // handleStartOpenChange,
+      // handleEndOpenChange,
       nextStep,
       previousStep,
     };

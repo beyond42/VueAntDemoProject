@@ -1,6 +1,8 @@
 <template>
   <a-form
     ref="formRef"
+    :model="formState"
+    :rules="rules"
     v-bind="layout">
 
     <a-form-item
@@ -10,7 +12,7 @@
       has-feedback
       help="Please provide us with number of attendees you expect">
       <a-input-number
-        v-model:value="noOfAttendees"
+        v-model:value="formState.noOfAttendees"
         :min="1"
         placeholder="No of attendees" />
     </a-form-item>
@@ -21,7 +23,7 @@
       name="expoFeature"
       has-feedback>
       <a-radio-group
-        v-model:value="expoFeature"
+        v-model:value="formState.expoFeature"
         :options="options" />
     </a-form-item>
 
@@ -32,7 +34,7 @@
       has-feedback
       help="Please provide us with number of exhibitioners you expect">
       <a-input-number
-        v-model:value="noOfExhibitioners"
+        v-model:value="formState.noOfExhibitioners"
         :min="1"
         placeholder="No of exhibitioners" />
     </a-form-item>
@@ -43,7 +45,7 @@
       name="officialWebsite"
       has-feedback>
       <a-radio-group
-        v-model:value="officialWebsite"
+        v-model:value="formState.officialWebsite"
         :options="options" />
     </a-form-item>
 
@@ -62,71 +64,36 @@
       </a-col>
     </a-row>
 
-    <a-form-item :wrapper-col="{ span: 12, offset: 8 }">
-      <a-button-group>
-        <a-button type="dashed" @click="resetForm">Reset</a-button>
-      </a-button-group>
-    </a-form-item>
-
   </a-form>
 </template>
 
 <script>
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
 import { checkNumberInputGeneral } from "@/utils/validators";
-import { defineComponent, ref } from 'vue';
-import store from "../store";
+import { defineComponent, reactive, ref, toRaw } from 'vue';
 
 export default defineComponent({
+  name: "EventDetails",
   components: {
     LeftOutlined,
     RightOutlined,
   },
-
-  computed: {
-    noOfAttendees: {
-      get() {
-        return store.state.event.attendeesNo;
-      },
-      set(value) {
-        store.commit('setAttendeesNo', value);
-      }
-    },
-    expoFeature: {
-      get() {
-        return store.state.event.expo_feature;
-      },
-      set(value) {
-        store.commit('setExpoFeature', value);
-      }
-    },
-    noOfExhibitioners: {
-      get() {
-        return store.state.event.exhibitionersNo;
-      },
-      set(value) {
-        store.commit('setExhibitionersNo', value);
-      }
-    },
-    officialWebsite: {
-      get() {
-        return store.state.event.event_hosting;
-      },
-      set(value) {
-        store.commit('setOfficialWebsite', value);
-      }
-    },
+  props: {
+    noOfAttendees: Number,
+    expoFeature: String,
+    noOfExhibitioners: Number,
+    officialWebsite: String,
   },
 
   setup(props, { emit }) {
     const formRef = ref();
 
-    // const formState = reactive({
-    //   noOfAttendees: undefined,
-    //   expoFeature: "",
-    //   noOfExhibitioners: undefined,
-    //   officialWebsite: "",
-    // });
+    const formState = reactive({
+      noOfAttendees: props.noOfAttendees || undefined,
+      expoFeature: props.expoFeature,
+      noOfExhibitioners: props.noOfExhibitioners || undefined,
+      officialWebsite: props.officialWebsite,
+    });
 
     const layout = {
       labelCol: {
@@ -183,24 +150,16 @@ export default defineComponent({
       ],
     };
 
-    // New handlers
-    const resetForm = () => {
-      formRef.value.resetFields();
-    };
-
-    // From old methods
     const nextStep = () => {
-      emit('event-details-submit');
-      console.log(store.state);
-      // formRef.value
-      //   .validate()
-      //   .then(() => {
-      //     emit('event-details-submit');
-      //     console.log('onSubmit values', formState, toRaw(formState));
-      //   })
-      //   .catch(error => {
-      //     console.log('onSubmit error', error);
-      //   });
+      formRef.value
+        .validate()
+        .then(() => {
+          emit('event-details-next', formState);
+          console.log('event-details-next values', toRaw(formState));
+        })
+        .catch(error => {
+          console.log('event-details-next error', error);
+        });
     };
 
     const previousStep = () =>{
@@ -209,12 +168,10 @@ export default defineComponent({
 
     return {
       formRef,
+      formState,
       layout,
       options,
       rules,
-      // New
-      resetForm,
-      // Old
       nextStep,
       previousStep,
     };

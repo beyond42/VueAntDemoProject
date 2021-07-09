@@ -1,6 +1,8 @@
 <template>
   <a-form
     ref="formRef"
+    :model="formState"
+    :rules="rules"
     v-bind="layout">
 
     <a-form-item
@@ -9,7 +11,7 @@
       name="domainForEvent"
       has-feedback>
       <a-radio-group
-        v-model:value="domainForEvent"
+        v-model:value="formState.domainForEvent"
         :options="domainForEventOptions"/>
     </a-form-item>
 
@@ -20,7 +22,7 @@
       has-feedback
       help="Please enter your own domain or subdomain for event">
       <a-input
-        v-model:value="domainSubdomainName"
+        v-model:value="formState.domainSubdomainName"
         placeholder="example.com/example.collectivibe.com"/>
     </a-form-item>
 
@@ -30,7 +32,7 @@
       name="typeOfEvent"
       has-feedback>
       <a-radio-group
-        v-model:value="typeOfEvent"
+        v-model:value="formState.typeOfEvent"
         :options="typeOfEventOptions" />
     </a-form-item>
 
@@ -49,62 +51,34 @@
       </a-col>
     </a-row>
 
-    <a-form-item :wrapper-col="{ span: 12, offset: 8 }">
-      <a-button-group>
-        <a-button type="dashed" @click="resetForm">Reset</a-button>
-      </a-button-group>
-    </a-form-item>
-
   </a-form>
 </template>
 
 <script>
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
-import { defineComponent, ref } from 'vue';
+import { defineComponent, reactive, ref, toRaw } from 'vue';
 import { checkTextInputGeneral } from "@/utils/validators";
-import store from "../store";
 
 export default defineComponent({
+  name: "FutureExpirience",
   components: {
     LeftOutlined,
     RightOutlined,
   },
-
-  computed: {
-    domainForEvent: {
-      get() {
-        return store.state.event.domain_for_event;
-      },
-      set(value) {
-        store.commit('setDomainForEvent', value);
-      }
-    },
-    domainSubdomainName: {
-      get() {
-        return store.state.event.event_domain;
-      },
-      set(value) {
-        store.commit('setEventDomainName', value);
-      }
-    },
-    typeOfEvent: {
-      get() {
-        return store.state.event.is_event_opened;
-      },
-      set(value) {
-        store.commit('setTypeOfEvent', value);
-      }
-    },
+  props: {
+    domainForEvent: String,
+    domainSubdomainName: String,
+    typeOfEvent: String
   },
 
   setup(props, { emit }) {
     const formRef = ref();
 
-    // const formState = reactive({
-    //   domainForEvent: "",
-    //   domainSubdomainName: "",
-    //   typeOfEvent: "",
-    // });
+    const formState = reactive({
+      domainForEvent: props.domainForEvent,
+      domainSubdomainName: props.domainSubdomainName,
+      typeOfEvent: props.typeOfEvent,
+    });
 
     const layout = {
       labelCol: {
@@ -161,24 +135,16 @@ export default defineComponent({
       ],
     };
 
-    // New handlers
-    const resetForm = () => {
-      formRef.value.resetFields();
-    };
-
-    // From old methods
     const nextStep = () => {
-      emit('future-expirience-submit')
-      console.log(store.state);
-      // formRef.value
-      //   .validate()
-      //   .then(() => {
-      //     emit('future-expirience-submit')
-      //     console.log('onSubmit values', formState, toRaw(formState));
-      //   })
-      //   .catch(error => {
-      //     console.log('onSubmit error', error);
-      //   });
+      formRef.value
+        .validate()
+        .then(() => {
+          emit('future-expirience-next', formState)
+          console.log('future-expirience-next values', toRaw(formState));
+        })
+        .catch(error => {
+          console.log('future-expirience-next error', error);
+        });
     };
 
     const previousStep = () => {
@@ -187,13 +153,11 @@ export default defineComponent({
 
     return {
       formRef,
+      formState,
       layout,
       domainForEventOptions,
       typeOfEventOptions,
       rules,
-      // New
-      resetForm,
-      // Old
       nextStep,
       previousStep
     };
