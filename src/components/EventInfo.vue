@@ -274,7 +274,7 @@ export default defineComponent({
     };
 
     const previousStep = () => {
-      emit("event-info-previous");
+      emit("event-info-previous", formState);
     };
 
     return {

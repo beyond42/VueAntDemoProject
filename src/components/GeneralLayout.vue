@@ -271,7 +271,7 @@ export default defineComponent({
     };
 
     const previousStep = () => {
-      emit("general-layout-previous");
+      emit("general-layout-previous", formState);
     };
 
     return {

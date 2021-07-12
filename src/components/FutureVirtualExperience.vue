@@ -148,7 +148,7 @@ export default defineComponent({
     };
 
     const previousStep = () => {
-      emit('future-expirience-previous')
+      emit('future-expirience-previous', formState)
     };
 
     return {

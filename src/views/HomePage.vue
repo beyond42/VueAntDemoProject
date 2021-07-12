@@ -41,7 +41,7 @@
           </event-details>
           <future-virtual-experience
             v-if="current === 3"
-            :domainForEvent="event.domainForEvent"
+            :domainForEvent="event.domain_for_event"
             :domainSubdomainName="event.event_domain"
             :typeOfEvent="event.is_event_opened"
             @future-expirience-next="futureExpirienceNext"
@@ -79,7 +79,7 @@ import EventDetails from "../components/EventDetails.vue";
 import FutureVirtualExperience from "../components/FutureVirtualExperience.vue";
 import GeneralLayout from "../components/GeneralLayout.vue";
 import Finish from "../components/Finish.vue";
-import { defineComponent, toRaw } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: "HomePage",
@@ -136,8 +136,7 @@ export default defineComponent({
         live_parallel_sessions: "", // varchar
         streamingEventsTool: "", // varchar
       },
-      submitMessage: "",
-      submitStatus: ""
+      submitStatus: true
     };
   },
   methods: {
@@ -150,17 +149,19 @@ export default defineComponent({
       this.event.user_email = formState.email;
       this.event.user_phone_number = formState.phoneNumber;
       this.event.countryCode = formState.countryCode;
-      console.log('EventUserInfo', toRaw(this.event));
     },
 
     // * Event Information
-    eventInfoPrevious() {
+    eventInfoPrevious(formState) {
       this.current--;
-      console.log('EventInfo-PrevClick', toRaw(this.event));
+      this.event.event_name = formState.eventName;
+      this.event.is_first_event = formState.firstEvent;
+      // this.event.event_logo = formState.eventImage; // TODO: Vratiti kada bude proradio insert image-a
+      this.event.days_of_event = formState.noOfDays;
+      this.event.start_date = formState.startDate;
+      this.event.end_date = formState.endDate; 
+      this.event.starting_time = formState.timeOfEvent;
     },
-    // ! NAPOMENA:
-    // ! format se mora uraditi na submitu podataka za datume i vrijeme
-    // ! jer antd datepicker i timepicker ocekuje moment object da bi nam radio Prev Next
     eventInfoNext(formState) {
       this.current++;
       this.event.event_name = formState.eventName;
@@ -168,15 +169,17 @@ export default defineComponent({
       // this.event.event_logo = formState.eventImage; // TODO: Vratiti kada bude proradio insert image-a
       this.event.days_of_event = formState.noOfDays;
       this.event.start_date = formState.startDate;
-      this.event.end_date = formState.endDate; // TODO: testiram jel ne radi zbog ovog - .format("YYYY-MM-DD")
-      this.event.starting_time = formState.timeOfEvent; // TODO: testiram jel ne radi zbog ovog - .format("HH:mm")
-      console.log('EventInfo', toRaw(this.event));
+      this.event.end_date = formState.endDate;
+      this.event.starting_time = formState.timeOfEvent;
     },
 
     // * Event Details
-    eventDetailsPrevious() {
+    eventDetailsPrevious(formState) {
       this.current--;
-      console.log('EventDetails-PrevClick', toRaw(this.event));
+      this.event.attendeesNo = formState.noOfAttendees;
+      this.event.expo_feature = formState.expoFeature;
+      this.event.exhibitionersNo = formState.noOfExhibitioners;
+      this.event.event_hosting = formState.officialWebsite;
     },
     eventDetailsNext(formState) {
       this.current++;
@@ -184,26 +187,31 @@ export default defineComponent({
       this.event.expo_feature = formState.expoFeature;
       this.event.exhibitionersNo = formState.noOfExhibitioners;
       this.event.event_hosting = formState.officialWebsite;
-      console.log('EventDetails', toRaw(this.event));
     },
 
     // * Future Virtual Expirience
-    futureExpiriencePrevious() {
+    futureExpiriencePrevious(formState) {
       this.current--;
-      console.log('FutureExpirience-PrevClick', toRaw(this.event));
+      this.event.domain_for_event = formState.domainForEvent;
+      this.event.event_domain = formState.domainSubdomainName;
+      this.event.is_event_opened = formState.typeOfEvent;
     },
     futureExpirienceNext(formState) {
       this.current++;
       this.event.domain_for_event = formState.domainForEvent;
       this.event.event_domain = formState.domainSubdomainName;
       this.event.is_event_opened = formState.typeOfEvent;
-      console.log('FutureExpirience', toRaw(this.event));
     },
 
     // * General Layout
-    generalLayoutPrevious() {
+    generalLayoutPrevious(formState) {
       this.current--;
-      console.log('GeneralLayout-PrevClick', toRaw(this.event));
+      this.event.boothsNo = formState.noOfBooths;
+      this.event.event_areas = formState.areasOfEvent;
+      this.event.multiple_types_of_booths = formState.eventHaveMultipleBooths;
+      this.event.live_or_recorded_content = formState.liveRecorded;
+      this.event.live_parallel_sessions = formState.parallelSessions;
+      this.event.streamingEventsTool = formState.preferredTool;
     },
     generalLayoutSubmit(formState) {
       this.current++;
@@ -213,28 +221,15 @@ export default defineComponent({
       this.event.live_or_recorded_content = formState.liveRecorded;
       this.event.live_parallel_sessions = formState.parallelSessions;
       this.event.streamingEventsTool = formState.preferredTool;
-      console.log('GeneralLayout', toRaw(this.event));
 
       this.submitEventData(this.event);
-      // this.pripremaFormSubmit(this.event);
     },
-
-    pripremaFormSubmit(data){
-      let formatiranje = JSON.stringify(data)
-      console.log(
-        '%c 🦼 formatiranje: ',
-        'font-size:20px;background-color: #B03734;color:#fff;',
-        formatiranje
-      );
-    },
-
     submitEventData(ev) {
       ev.event_areas = ev.event_areas.toString();
       ev.start_date = ev.start_date.format("YYYY-MM-DD");
       ev.end_date = ev.end_date.format("YYYY-MM-DD");
       ev.starting_time = ev.starting_time.format("HH:mm");
       let dataForSubmit = JSON.stringify(ev);
-      console.log('%c 🍠 dataForSubmit: ', 'font-size:20px;background-color: #F5CE50;color:#fff;', dataForSubmit);
       const headers = {
         "Content-Type": "application/json"
       };
@@ -246,16 +241,10 @@ export default defineComponent({
         .then((response) => {
           console.log(response);
           this.submitStatus = true;
-          setTimeout(() => {
-            this.$message.success("Event is successfully submitted!");
-          }, 1000);
         })
         .catch((err) => {
           console.log(err.response.data);
           this.submitStatus = false;
-          setTimeout(() => {
-            this.$message.error("Error! Please, try again.");
-          }, 1000);
         });
     }
   }

@@ -163,7 +163,7 @@ export default defineComponent({
     };
 
     const previousStep = () =>{
-      emit('event-details-previous');
+      emit('event-details-previous', formState);
     };
 
     return {

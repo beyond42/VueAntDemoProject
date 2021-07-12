@@ -87,7 +87,7 @@
 
 <script>
 import { RightOutlined } from "@ant-design/icons-vue";
-import { defineComponent, reactive, ref, toRaw } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 import { checkTextInputGeneral } from "@/utils/validators";
 
 export default defineComponent({
@@ -149,7 +149,6 @@ export default defineComponent({
         .validate()
         .then(() => {
           emit("event-user-info-next", formState);
-          console.log('event-user-info-next values', toRaw(formState));
         })
         .catch(error => {
           console.log('event-user-info-next error', error);
