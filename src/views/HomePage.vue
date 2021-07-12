@@ -63,7 +63,7 @@
 
         <a-col class="gutter-row" :span="6">
           <a-steps v-model:current="current" direction="vertical">
-            <a-step v-for="titles in titles" :key="titles" :title="titles" />
+            <a-step v-for="titles in titles" :key="titles" :title="titles" disabled />
           </a-steps>
         </a-col>
       </a-row>
