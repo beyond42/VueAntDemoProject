@@ -70,7 +70,7 @@
 <script>
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
 import { checkNumberInputGeneral } from "@/utils/validators";
-import { defineComponent, reactive, ref, toRaw } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 
 export default defineComponent({
   name: "EventDetails",
@@ -155,7 +155,6 @@ export default defineComponent({
         .validate()
         .then(() => {
           emit('event-details-next', formState);
-          console.log('event-details-next values', toRaw(formState));
         })
         .catch(error => {
           console.log('event-details-next error', error);

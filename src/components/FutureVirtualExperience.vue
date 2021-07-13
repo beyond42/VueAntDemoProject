@@ -56,7 +56,7 @@
 
 <script>
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
-import { defineComponent, reactive, ref, toRaw } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import { checkTextInputGeneral } from "@/utils/validators";
 
 export default defineComponent({
@@ -139,8 +139,7 @@ export default defineComponent({
       formRef.value
         .validate()
         .then(() => {
-          emit('future-expirience-next', formState)
-          console.log('future-expirience-next values', toRaw(formState));
+          emit('future-expirience-next', formState);
         })
         .catch(error => {
           console.log('future-expirience-next error', error);

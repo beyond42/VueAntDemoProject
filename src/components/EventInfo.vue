@@ -119,7 +119,7 @@
 
 <script>
 import { InboxOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
-import { defineComponent, reactive, ref, toRaw } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 import { message } from "ant-design-vue"
 import { checkNumberInput } from "@/utils/validators";
 
@@ -266,7 +266,6 @@ export default defineComponent({
         .validate()
         .then(() => {
           emit("event-info-next", formState);
-          console.log('event-info-next values', toRaw(formState));
         })
         .catch(error => {
           console.log('event-info-next error', error);

@@ -89,7 +89,7 @@
 <script>
 import { LeftOutlined, SaveOutlined } from '@ant-design/icons-vue';
 import { checkNumberInputGeneral } from "@/utils/validators";
-import { defineComponent, reactive, ref, toRaw } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 
 export default defineComponent({
   name: "GeneralLayout",
@@ -263,7 +263,6 @@ export default defineComponent({
         .validate()
         .then(() => {
           emit('general-layout-submit', formState);
-          console.log('general-layout-submit values', toRaw(formState));
         })
         .catch(error => {
           console.log('general-layout-submit error', error);
