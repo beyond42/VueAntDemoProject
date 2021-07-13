@@ -156,7 +156,7 @@ export default defineComponent({
       this.current--;
       this.event.event_name = formState.eventName;
       this.event.is_first_event = formState.firstEvent;
-      // this.event.event_logo = formState.eventImage; // TODO: Vratiti kada bude proradio insert image-a
+      this.event.event_logo = formState.eventImage;
       this.event.days_of_event = formState.noOfDays;
       this.event.start_date = formState.startDate;
       this.event.end_date = formState.endDate; 
@@ -166,7 +166,7 @@ export default defineComponent({
       this.current++;
       this.event.event_name = formState.eventName;
       this.event.is_first_event = formState.firstEvent;
-      // this.event.event_logo = formState.eventImage; // TODO: Vratiti kada bude proradio insert image-a
+      this.event.event_logo = formState.eventImage; 
       this.event.days_of_event = formState.noOfDays;
       this.event.start_date = formState.startDate;
       this.event.end_date = formState.endDate;
