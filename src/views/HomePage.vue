@@ -230,8 +230,6 @@ export default defineComponent({
       ev.end_date = ev.end_date.format("YYYY-MM-DD");
       ev.starting_time = ev.starting_time.format("HH:mm");
       let dataForSubmit = JSON.stringify(ev);
-      console.log('%c 🥑 ev: ', 'font-size:20px;background-color: #33A5FF;color:#fff;', ev);
-
       const headers = {
         "Content-Type": "application/json"
       };
