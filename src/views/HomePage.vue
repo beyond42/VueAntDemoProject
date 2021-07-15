@@ -156,7 +156,7 @@ export default defineComponent({
       this.current--;
       this.event.event_name = formState.eventName;
       this.event.is_first_event = formState.firstEvent;
-      this.event.event_logo = formState.eventImage;
+      this.event.event_logo = formState.eventLogo;
       this.event.days_of_event = formState.noOfDays;
       this.event.start_date = formState.startDate;
       this.event.end_date = formState.endDate; 
@@ -166,7 +166,7 @@ export default defineComponent({
       this.current++;
       this.event.event_name = formState.eventName;
       this.event.is_first_event = formState.firstEvent;
-      this.event.event_logo = formState.eventImage; 
+      this.event.event_logo = formState.eventLogo; 
       this.event.days_of_event = formState.noOfDays;
       this.event.start_date = formState.startDate;
       this.event.end_date = formState.endDate;
@@ -230,6 +230,8 @@ export default defineComponent({
       ev.end_date = ev.end_date.format("YYYY-MM-DD");
       ev.starting_time = ev.starting_time.format("HH:mm");
       let dataForSubmit = JSON.stringify(ev);
+      console.log('%c 🥑 ev: ', 'font-size:20px;background-color: #33A5FF;color:#fff;', ev);
+
       const headers = {
         "Content-Type": "application/json"
       };
