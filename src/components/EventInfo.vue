@@ -35,7 +35,8 @@
         name="file"
         :multiple="true"
         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-        @change="handleChange">
+        @change="handleChange"
+        accept="image/*">
         <p class="ant-upload-drag-icon">
           <inbox-outlined />
         </p>
@@ -237,6 +238,7 @@ export default defineComponent({
 
     // * Logo upload
     const handleChange = info => {
+      console.log(info);
       const status = info.file.status;
 
       if (status !== "uploading") {
@@ -245,21 +247,14 @@ export default defineComponent({
 
       if (status === "done") {
         message.success(`${info.file.name} file uploaded successfully.`);
-        formState.eventImage = info.file;
+        // TODO: Proveriti sta treba da se upise u bazu, da li info.file ili nesto drugo, da bi se fajl prikazao u assets folderu na Marsu
+        // Primer dobrog upisa u bazi: {fileName: "collectiVibeLogo.png", data: JavaObject[byte[]], size: 12581, contentType: "image/png"}
+        // Nas trenutni upis: {"uid":"vc-upload-1626946808493-2","lastModified":1.62383082532E12,"lastModifiedDate":"2021-06-16 08:07:05","name":"avatar.png","size":2801,"type":"image\/png","percent":100,"originFileObj":{"uid":"vc-upload-1626946808493-2"},"status":"done","response":{"name":"xxx.png","status":"done","url":"https:\/\/zos.alipayobjects.com\/rmsportal\/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png","thumbUrl":"https:\/\/zos.alipayobjects.com\/rmsportal\/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"},"xhr":{}}
+        formState.eventLogo = info;
       } else if (status === "error") {
         message.error(`${info.file.name} file upload failed.`);
       }
     };
-
-    // const handleStartOpenChange = (date, dateString) => {
-    //   formState.startDate = dateString;
-    //   console.log('startDate', date, dateString);
-    // };
-
-    // const handleEndOpenChange = (date, dateString) => {
-    //   formState.endDate = dateString;
-    //   console.log('endDate', date, dateString);
-    // };
 
     const nextStep = () => {
       formRef.value
@@ -284,8 +279,6 @@ export default defineComponent({
       rules,
       fileList: ref([]),
       handleChange,
-      // handleStartOpenChange,
-      // handleEndOpenChange,
       nextStep,
       previousStep,
     };
