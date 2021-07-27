@@ -69,6 +69,7 @@
 
 <script>
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
+import { notification } from "ant-design-vue";
 import { checkNumberInputGeneral } from "@/utils/validators";
 import { defineComponent, reactive, ref } from 'vue';
 
@@ -154,10 +155,23 @@ export default defineComponent({
       formRef.value
         .validate()
         .then(() => {
-          emit('event-details-next', formState);
+          notification.success({
+            message: 'Success',
+            description: 'Uspjesno ste popunili sva polja!',
+            duration: 2,
+            placement: 'bottomRight',
+          });
+          setTimeout(() => {
+            emit('event-details-next', formState);
+          }, 2250);
+
         })
-        .catch(error => {
-          console.log('event-details-next error', error);
+        .catch(() => {
+          notification.error({
+            message: 'Nedostaju podaci',
+            description: 'Molimo popunite obavezna polja!',
+            duration: 3
+          });
         });
     };
 

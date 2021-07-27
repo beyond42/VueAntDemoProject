@@ -56,6 +56,7 @@
 
 <script>
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
+import { notification } from "ant-design-vue";
 import { defineComponent, reactive, ref } from 'vue';
 import { checkTextInputGeneral } from "@/utils/validators";
 
@@ -139,10 +140,22 @@ export default defineComponent({
       formRef.value
         .validate()
         .then(() => {
-          emit('future-expirience-next', formState);
+          notification.success({
+            message: 'Success',
+            description: 'Uspjesno ste popunili sva polja!',
+            duration: 2,
+            placement: 'bottomRight',
+          });
+          setTimeout(() => {
+            emit('future-expirience-next', formState);
+          }, 2250);
         })
-        .catch(error => {
-          console.log('future-expirience-next error', error);
+        .catch(() => {
+          notification.error({
+            message: 'Nedostaju podaci',
+            description: 'Molimo popunite obavezna polja!',
+            duration: 3
+          });
         });
     };
 
