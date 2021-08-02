@@ -61,11 +61,23 @@
           <finish v-if="current === 5" :statusMessage="submitStatus"></finish>
         </a-col>
 
-        <a-col class="gutter-row" :span="6">
+        <!-- <a-col class="gutter-row" :span="6">
           <a-steps v-model:current="current" direction="vertical">
             <a-step v-for="titles in titles" :key="titles" :title="titles" :disabled="isDisabled ? true : titles.index <= current" @click="checkCurrent"/>
           </a-steps>
+        </a-col> -->
+
+        <a-col class="gutter-row" :span="6">
+          <a-steps v-model:current="current" direction="vertical">
+            <!-- Obrisati description i @click="checkCurrent" na svim step mozda description mozemo iskoristiti za neki popover -->
+            <a-step title="Personal information" description="1 step" :disabled="isDisabled1" @click="checkCurrent" />
+            <a-step title="Event information" description="2 step" :disabled="isDisabled2" @click="checkCurrent" />
+            <a-step title="Event details" description="3 step" :disabled="isDisabled3" @click="checkCurrent" />
+            <a-step title="Future virtual experience" description="4 step" :disabled="isDisabled4" @click="checkCurrent" />
+            <a-step title="General layout of virtual event" description="5 step" :disabled="isDisabled5" @click="checkCurrent" />
+          </a-steps>
         </a-col>
+
       </a-row>
     </a-form>
   </section>
@@ -94,6 +106,7 @@ export default defineComponent({
 
   data() {
     return {
+      // TODO moze se brisati jer smo ubacili pojedinacno step radi disabled props na validaciji
       titles: [
         "Personal information",
         "Event information",
@@ -103,7 +116,11 @@ export default defineComponent({
       ],
       imageSrc: "",
       current: 0,
-      isDisabled: true,
+      isDisabled1: true,
+      isDisabled2: true,
+      isDisabled3: true,
+      isDisabled4: true,
+      isDisabled5: true,
       event: {
         // ? Personal Information
         user_firstname: "", // varchar
@@ -150,6 +167,8 @@ export default defineComponent({
       this.event.user_email = formState.email;
       this.event.user_phone_number = formState.phoneNumber;
       this.event.countryCode = formState.countryCode;
+      this.isDisabled1 = false;
+      this.isDisabled2 = false;
     },
 
     // * Event Information
@@ -160,18 +179,21 @@ export default defineComponent({
       this.event.event_logo = formState.eventLogo;
       this.event.days_of_event = formState.noOfDays;
       this.event.start_date = formState.startDate;
-      this.event.end_date = formState.endDate; 
+      this.event.end_date = formState.endDate;
       this.event.starting_time = formState.timeOfEvent;
+      this.isDisabled2 = false;
     },
     eventInfoNext(formState) {
       this.current++;
       this.event.event_name = formState.eventName;
       this.event.is_first_event = formState.firstEvent;
-      this.event.event_logo = formState.eventLogo; 
+      this.event.event_logo = formState.eventLogo;
       this.event.days_of_event = formState.noOfDays;
       this.event.start_date = formState.startDate;
       this.event.end_date = formState.endDate;
       this.event.starting_time = formState.timeOfEvent;
+      this.isDisabled2 = false;
+      this.isDisabled3 = false;
     },
 
     // * Event Details
@@ -181,6 +203,7 @@ export default defineComponent({
       this.event.expo_feature = formState.expoFeature;
       this.event.exhibitionersNo = formState.noOfExhibitioners;
       this.event.event_hosting = formState.officialWebsite;
+      this.isDisabled3 = false;
     },
     eventDetailsNext(formState) {
       this.current++;
@@ -188,6 +211,8 @@ export default defineComponent({
       this.event.expo_feature = formState.expoFeature;
       this.event.exhibitionersNo = formState.noOfExhibitioners;
       this.event.event_hosting = formState.officialWebsite;
+      this.isDisabled3 = false;
+      this.isDisabled4 = false;
     },
 
     // * Future Virtual Expirience
@@ -196,12 +221,15 @@ export default defineComponent({
       this.event.domain_for_event = formState.domainForEvent;
       this.event.event_domain = formState.domainSubdomainName;
       this.event.is_event_opened = formState.typeOfEvent;
+      this.isDisabled4 = false;
     },
     futureExpirienceNext(formState) {
       this.current++;
       this.event.domain_for_event = formState.domainForEvent;
       this.event.event_domain = formState.domainSubdomainName;
       this.event.is_event_opened = formState.typeOfEvent;
+      this.isDisabled4 = false;
+      this.isDisabled5 = false;
     },
 
     // * General Layout
@@ -213,6 +241,7 @@ export default defineComponent({
       this.event.live_or_recorded_content = formState.liveRecorded;
       this.event.live_parallel_sessions = formState.parallelSessions;
       this.event.streamingEventsTool = formState.preferredTool;
+      this.isDisabled5 = false;
     },
     generalLayoutSubmit(formState) {
       this.current++;
@@ -248,9 +277,13 @@ export default defineComponent({
           this.submitStatus = false;
         });
     },
+    // TODO moze se brisati ovaj check jer se ne koristi osim za console.log
     checkCurrent(){
-      console.log(this.current);
-      console.log(this.isDisabled)
+      console.log(
+        '%c 🔁 isDisabled: ',
+        'font-size:20px;background-color: #ED9EC7;color:#fff;',
+        this.isDisabled1, this.isDisabled2, this.isDisabled3, this.isDisabled4, this.isDisabled5
+      );
     }
   }
 });
