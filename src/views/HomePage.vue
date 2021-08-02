@@ -63,7 +63,7 @@
 
         <a-col class="gutter-row" :span="6">
           <a-steps v-model:current="current" direction="vertical">
-            <a-step v-for="titles in titles" :key="titles" :title="titles" disabled />
+            <a-step v-for="titles in titles" :key="titles" :title="titles" :disabled="isDisabled ? true : titles.index <= current" @click="checkCurrent"/>
           </a-steps>
         </a-col>
       </a-row>
@@ -103,6 +103,7 @@ export default defineComponent({
       ],
       imageSrc: "",
       current: 0,
+      isDisabled: true,
       event: {
         // ? Personal Information
         user_firstname: "", // varchar
@@ -246,6 +247,10 @@ export default defineComponent({
           console.log(err.response.data);
           this.submitStatus = false;
         });
+    },
+    checkCurrent(){
+      console.log(this.current);
+      console.log(this.isDisabled)
     }
   }
 });
