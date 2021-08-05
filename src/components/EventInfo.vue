@@ -262,7 +262,7 @@ export default defineComponent({
         .then(() => {
           notification.success({
             message: 'Success',
-            description: 'Uspjesno ste popunili sva polja!',
+            description: 'Uspjesno ste popunili sva polja na ovom koraku!',
             duration: 2,
             placement: 'bottomRight',
           });

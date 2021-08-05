@@ -63,9 +63,14 @@
 
         <a-col class="gutter-row" :span="6">
           <a-steps v-model:current="current" direction="vertical">
-            <a-step v-for="titles in titles" :key="titles" :title="titles" disabled />
+            <a-step title="Personal information" :disabled="isDisabled1"/>
+            <a-step title="Event information" :disabled="isDisabled2"/>
+            <a-step title="Event details" :disabled="isDisabled3"/>
+            <a-step title="Future virtual experience"  :disabled="isDisabled4"/>
+            <a-step title="General layout of virtual event" :disabled="isDisabled5"/>
           </a-steps>
         </a-col>
+
       </a-row>
     </a-form>
   </section>
@@ -103,6 +108,11 @@ export default defineComponent({
       ],
       imageSrc: "",
       current: 0,
+      isDisabled1: true,
+      isDisabled2: true,
+      isDisabled3: true,
+      isDisabled4: true,
+      isDisabled5: true,
       event: {
         // ? Personal Information
         user_firstname: "", // varchar
@@ -149,6 +159,8 @@ export default defineComponent({
       this.event.user_email = formState.email;
       this.event.user_phone_number = formState.phoneNumber;
       this.event.countryCode = formState.countryCode;
+      this.isDisabled1 = false;
+      this.isDisabled2 = false;
     },
 
     // * Event Information
@@ -159,18 +171,21 @@ export default defineComponent({
       this.event.event_logo = formState.eventLogo;
       this.event.days_of_event = formState.noOfDays;
       this.event.start_date = formState.startDate;
-      this.event.end_date = formState.endDate; 
+      this.event.end_date = formState.endDate;
       this.event.starting_time = formState.timeOfEvent;
+      this.isDisabled2 = false;
     },
     eventInfoNext(formState) {
       this.current++;
       this.event.event_name = formState.eventName;
       this.event.is_first_event = formState.firstEvent;
-      this.event.event_logo = formState.eventLogo; 
+      this.event.event_logo = formState.eventLogo;
       this.event.days_of_event = formState.noOfDays;
       this.event.start_date = formState.startDate;
       this.event.end_date = formState.endDate;
       this.event.starting_time = formState.timeOfEvent;
+      this.isDisabled2 = false;
+      this.isDisabled3 = false;
     },
 
     // * Event Details
@@ -180,6 +195,7 @@ export default defineComponent({
       this.event.expo_feature = formState.expoFeature;
       this.event.exhibitionersNo = formState.noOfExhibitioners;
       this.event.event_hosting = formState.officialWebsite;
+      this.isDisabled3 = false;
     },
     eventDetailsNext(formState) {
       this.current++;
@@ -187,6 +203,8 @@ export default defineComponent({
       this.event.expo_feature = formState.expoFeature;
       this.event.exhibitionersNo = formState.noOfExhibitioners;
       this.event.event_hosting = formState.officialWebsite;
+      this.isDisabled3 = false;
+      this.isDisabled4 = false;
     },
 
     // * Future Virtual Expirience
@@ -195,12 +213,15 @@ export default defineComponent({
       this.event.domain_for_event = formState.domainForEvent;
       this.event.event_domain = formState.domainSubdomainName;
       this.event.is_event_opened = formState.typeOfEvent;
+      this.isDisabled4 = false;
     },
     futureExpirienceNext(formState) {
       this.current++;
       this.event.domain_for_event = formState.domainForEvent;
       this.event.event_domain = formState.domainSubdomainName;
       this.event.is_event_opened = formState.typeOfEvent;
+      this.isDisabled4 = false;
+      this.isDisabled5 = false;
     },
 
     // * General Layout
@@ -212,6 +233,7 @@ export default defineComponent({
       this.event.live_or_recorded_content = formState.liveRecorded;
       this.event.live_parallel_sessions = formState.parallelSessions;
       this.event.streamingEventsTool = formState.preferredTool;
+      this.isDisabled5 = false;
     },
     generalLayoutSubmit(formState) {
       this.current++;
