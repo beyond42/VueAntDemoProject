@@ -61,20 +61,13 @@
           <finish v-if="current === 5" :statusMessage="submitStatus"></finish>
         </a-col>
 
-        <!-- <a-col class="gutter-row" :span="6">
-          <a-steps v-model:current="current" direction="vertical">
-            <a-step v-for="titles in titles" :key="titles" :title="titles" :disabled="isDisabled ? true : titles.index <= current" @click="checkCurrent"/>
-          </a-steps>
-        </a-col> -->
-
         <a-col class="gutter-row" :span="6">
           <a-steps v-model:current="current" direction="vertical">
-            <!-- Obrisati description i @click="checkCurrent" na svim step mozda description mozemo iskoristiti za neki popover -->
-            <a-step title="Personal information" description="1 step" :disabled="isDisabled1" @click="checkCurrent" />
-            <a-step title="Event information" description="2 step" :disabled="isDisabled2" @click="checkCurrent" />
-            <a-step title="Event details" description="3 step" :disabled="isDisabled3" @click="checkCurrent" />
-            <a-step title="Future virtual experience" description="4 step" :disabled="isDisabled4" @click="checkCurrent" />
-            <a-step title="General layout of virtual event" description="5 step" :disabled="isDisabled5" @click="checkCurrent" />
+            <a-step title="Personal information" :disabled="isDisabled1"/>
+            <a-step title="Event information" :disabled="isDisabled2"/>
+            <a-step title="Event details" :disabled="isDisabled3"/>
+            <a-step title="Future virtual experience"  :disabled="isDisabled4"/>
+            <a-step title="General layout of virtual event" :disabled="isDisabled5"/>
           </a-steps>
         </a-col>
 
@@ -106,7 +99,6 @@ export default defineComponent({
 
   data() {
     return {
-      // TODO moze se brisati jer smo ubacili pojedinacno step radi disabled props na validaciji
       titles: [
         "Personal information",
         "Event information",
@@ -276,14 +268,6 @@ export default defineComponent({
           console.log(err.response.data);
           this.submitStatus = false;
         });
-    },
-    // TODO moze se brisati ovaj check jer se ne koristi osim za console.log
-    checkCurrent(){
-      console.log(
-        '%c 🔁 isDisabled: ',
-        'font-size:20px;background-color: #ED9EC7;color:#fff;',
-        this.isDisabled1, this.isDisabled2, this.isDisabled3, this.isDisabled4, this.isDisabled5
-      );
     }
   }
 });
